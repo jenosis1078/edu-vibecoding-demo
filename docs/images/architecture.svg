@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 720" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <linearGradient id="clientGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="cognitoGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#DD344C"/>
+      <stop offset="100%" stop-color="#C0293D"/>
+    </linearGradient>
+    <linearGradient id="apiGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+    <linearGradient id="lambdaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+    <linearGradient id="dynamoGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="cdkGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="cicdGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#4F46E5"/>
+    </linearGradient>
+
+    <marker id="arrowDown" markerWidth="10" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748B"/>
+    </marker>
+    <marker id="arrowRight" markerWidth="10" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748B"/>
+    </marker>
+    <marker id="arrowLeft" markerWidth="10" markerHeight="7" refX="5" refY="3.5" orient="auto-start-reverse">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748B"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="720" rx="12" fill="#F8FAFC"/>
+
+  <!-- Title -->
+  <text x="450" y="36" text-anchor="middle" font-size="20" font-weight="700" fill="#1E293B">TODO Web App - System Architecture</text>
+
+  <!-- AWS Cloud boundary -->
+  <rect x="260" y="170" width="420" height="500" rx="12" fill="none" stroke="#FF9900" stroke-width="2" stroke-dasharray="8,4"/>
+  <rect x="280" y="160" width="100" height="24" rx="4" fill="#FF9900"/>
+  <text x="330" y="176" text-anchor="middle" font-size="12" font-weight="600" fill="#FFFFFF">AWS Cloud</text>
+
+  <!-- Client (top center) -->
+  <rect x="285" y="56" width="330" height="90" rx="10" fill="url(#clientGrad)"/>
+  <!-- React icon -->
+  <circle cx="325" cy="88" r="16" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+  <ellipse cx="325" cy="88" rx="16" ry="6" fill="none" stroke="#FFFFFF" stroke-width="1.2"/>
+  <ellipse cx="325" cy="88" rx="6" ry="16" fill="none" stroke="#FFFFFF" stroke-width="1.2"/>
+  <circle cx="325" cy="88" r="3" fill="#FFFFFF"/>
+  <text x="420" y="84" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">React + Vite + Tailwind</text>
+  <text x="420" y="104" text-anchor="middle" font-size="11" fill="#DBEAFE">TypeScript | Zustand | React Context</text>
+  <text x="420" y="120" text-anchor="middle" font-size="10" fill="#BFDBFE">GitHub Pages</text>
+
+  <!-- Arrow: Client to Cognito -->
+  <line x1="400" y1="146" x2="400" y2="187" stroke="#64748B" stroke-width="2" marker-end="url(#arrowDown)"/>
+  <rect x="407" y="155" width="90" height="18" rx="3" fill="#FEF3C7"/>
+  <text x="452" y="167" text-anchor="middle" font-size="9" fill="#92400E">HTTPS / JWT</text>
+
+  <!-- Login label -->
+  <rect x="237" y="155" width="62" height="18" rx="3" fill="#E0E7FF"/>
+  <text x="268" y="167" text-anchor="middle" font-size="9" fill="#3730A3">Login</text>
+
+  <!-- Cognito -->
+  <rect x="310" y="190" width="260" height="70" rx="10" fill="url(#cognitoGrad)"/>
+  <!-- Lock icon -->
+  <rect x="336" y="216" width="14" height="12" rx="2" fill="#FFFFFF"/>
+  <path d="M338,216 v-4 a5,5 0 0 1 10,0 v4" fill="none" stroke="#FFFFFF" stroke-width="1.8"/>
+  <text x="440" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">AWS Cognito</text>
+  <text x="440" y="240" text-anchor="middle" font-size="10" fill="#FECDD3">User Pool | Email/PW Auth</text>
+
+  <!-- Arrow: Cognito to API Gateway -->
+  <line x1="440" y1="260" x2="440" y2="297" stroke="#64748B" stroke-width="2" marker-end="url(#arrowDown)"/>
+  <rect x="447" y="267" width="90" height="18" rx="3" fill="#FEF3C7"/>
+  <text x="492" y="279" text-anchor="middle" font-size="9" fill="#92400E">Access Token</text>
+
+  <!-- API Gateway -->
+  <rect x="310" y="300" width="260" height="70" rx="10" fill="url(#apiGrad)"/>
+  <!-- Gateway icon -->
+  <rect x="338" y="326" width="16" height="3" rx="1" fill="#FFFFFF"/>
+  <rect x="338" y="332" width="16" height="3" rx="1" fill="#FFFFFF"/>
+  <rect x="338" y="338" width="16" height="3" rx="1" fill="#FFFFFF"/>
+  <text x="440" y="330" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">API Gateway (REST)</text>
+  <text x="440" y="348" text-anchor="middle" font-size="10" fill="#DDD6FE">Cognito Authorizer | CORS</text>
+
+  <!-- Arrow: API Gateway to Lambda -->
+  <line x1="440" y1="370" x2="440" y2="407" stroke="#64748B" stroke-width="2" marker-end="url(#arrowDown)"/>
+
+  <!-- Lambda -->
+  <rect x="290" y="410" width="300" height="100" rx="10" fill="url(#lambdaGrad)"/>
+  <!-- Lambda symbol -->
+  <text x="318" y="448" font-size="22" font-weight="700" fill="#FFFFFF">&#955;</text>
+  <text x="440" y="440" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">AWS Lambda</text>
+  <text x="440" y="458" text-anchor="middle" font-size="10" fill="#FEF3C7">Node.js 20.x / TypeScript</text>
+
+  <!-- Lambda function boxes -->
+  <rect x="310" y="468" width="64" height="28" rx="4" fill="#FFFFFF" fill-opacity="0.25"/>
+  <text x="342" y="486" text-anchor="middle" font-size="8" font-weight="600" fill="#FFFFFF">createTodo</text>
+
+  <rect x="382" y="468" width="56" height="28" rx="4" fill="#FFFFFF" fill-opacity="0.25"/>
+  <text x="410" y="486" text-anchor="middle" font-size="8" font-weight="600" fill="#FFFFFF">getTodos</text>
+
+  <rect x="446" y="468" width="64" height="28" rx="4" fill="#FFFFFF" fill-opacity="0.25"/>
+  <text x="478" y="486" text-anchor="middle" font-size="8" font-weight="600" fill="#FFFFFF">deleteTodo</text>
+
+  <rect x="518" y="468" width="60" height="28" rx="4" fill="#FFFFFF" fill-opacity="0.25"/>
+  <text x="548" y="486" text-anchor="middle" font-size="8" font-weight="600" fill="#FFFFFF">toggleTodo</text>
+
+  <!-- Arrow: Lambda to DynamoDB -->
+  <line x1="440" y1="510" x2="440" y2="551" stroke="#64748B" stroke-width="2" marker-end="url(#arrowDown)"/>
+
+  <!-- DynamoDB -->
+  <rect x="320" y="554" width="240" height="70" rx="10" fill="url(#dynamoGrad)"/>
+  <!-- DB icon -->
+  <ellipse cx="350" cy="582" rx="12" ry="6" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+  <line x1="338" y1="582" x2="338" y2="596" stroke="#FFFFFF" stroke-width="1.5"/>
+  <line x1="362" y1="582" x2="362" y2="596" stroke="#FFFFFF" stroke-width="1.5"/>
+  <ellipse cx="350" cy="596" rx="12" ry="6" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+  <text x="440" y="584" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">DynamoDB</text>
+  <text x="440" y="602" text-anchor="middle" font-size="10" fill="#BFDBFE">PK: userId | SK: id</text>
+  <text x="440" y="616" text-anchor="middle" font-size="9" fill="#93C5FD">PAY_PER_REQUEST</text>
+
+  <!-- AWS CDK (right side) -->
+  <rect x="720" y="340" width="150" height="70" rx="10" fill="url(#cdkGrad)"/>
+  <text x="795" y="372" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">AWS CDK</text>
+  <text x="795" y="390" text-anchor="middle" font-size="10" fill="#D1FAE5">TypeScript (IaC)</text>
+
+  <!-- Dashed arrows from CDK to AWS services -->
+  <line x1="720" y1="345" x2="576" y2="225" stroke="#10B981" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowLeft)"/>
+  <line x1="720" y1="350" x2="576" y2="320" stroke="#10B981" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowLeft)"/>
+  <line x1="720" y1="375" x2="596" y2="440" stroke="#10B981" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowLeft)"/>
+  <line x1="720" y1="395" x2="565" y2="575" stroke="#10B981" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowLeft)"/>
+
+  <text x="795" y="430" text-anchor="middle" font-size="9" fill="#6B7280" font-style="italic">manages all</text>
+  <text x="795" y="442" text-anchor="middle" font-size="9" fill="#6B7280" font-style="italic">AWS resources</text>
+
+  <!-- GitHub Actions / CI/CD (left side) -->
+  <rect x="30" y="340" width="180" height="90" rx="10" fill="url(#cicdGrad)"/>
+  <!-- GitHub icon -->
+  <circle cx="66" cy="372" r="12" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+  <circle cx="66" cy="369" r="4" fill="#FFFFFF"/>
+  <text x="120" y="370" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">GitHub Actions</text>
+  <text x="120" y="388" text-anchor="middle" font-size="10" fill="#C7D2FE">CI/CD Pipeline</text>
+  <text x="120" y="406" text-anchor="middle" font-size="9" fill="#A5B4FC">Build &amp; Deploy to</text>
+  <text x="120" y="418" text-anchor="middle" font-size="9" fill="#A5B4FC">GitHub Pages</text>
+
+  <!-- Arrow: GitHub Actions to Client (deploy) -->
+  <path d="M120,340 L120,120 L285,101" fill="none" stroke="#6366F1" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowRight)"/>
+  <rect x="130" y="210" width="52" height="18" rx="3" fill="#E0E7FF"/>
+  <text x="156" y="222" text-anchor="middle" font-size="9" fill="#3730A3">Deploy</text>
+
+  <!-- API Endpoints legend (bottom left) -->
+  <rect x="30" y="480" width="210" height="150" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="135" y="502" text-anchor="middle" font-size="12" font-weight="700" fill="#1E293B">API Endpoints</text>
+  <line x1="45" y1="510" x2="225" y2="510" stroke="#E2E8F0" stroke-width="1"/>
+
+  <rect x="50" y="520" width="48" height="18" rx="3" fill="#22C55E"/>
+  <text x="74" y="533" text-anchor="middle" font-size="9" font-weight="700" fill="#FFFFFF">POST</text>
+  <text x="108" y="533" font-size="10" fill="#475569">/todos</text>
+
+  <rect x="50" y="545" width="48" height="18" rx="3" fill="#3B82F6"/>
+  <text x="74" y="558" text-anchor="middle" font-size="9" font-weight="700" fill="#FFFFFF">GET</text>
+  <text x="108" y="558" font-size="10" fill="#475569">/todos</text>
+
+  <rect x="50" y="570" width="48" height="18" rx="3" fill="#EF4444"/>
+  <text x="74" y="583" text-anchor="middle" font-size="9" font-weight="700" fill="#FFFFFF">DELETE</text>
+  <text x="108" y="583" font-size="10" fill="#475569">/todos/{id}</text>
+
+  <rect x="50" y="595" width="48" height="18" rx="3" fill="#F59E0B"/>
+  <text x="74" y="608" text-anchor="middle" font-size="9" font-weight="700" fill="#FFFFFF">PATCH</text>
+  <text x="108" y="608" font-size="10" fill="#475569">/todos/{id}/toggle</text>
+
+  <!-- Legend (bottom right) -->
+  <rect x="710" y="480" width="160" height="110" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="790" y="502" text-anchor="middle" font-size="12" font-weight="700" fill="#1E293B">Legend</text>
+  <line x1="725" y1="510" x2="855" y2="510" stroke="#E2E8F0" stroke-width="1"/>
+
+  <line x1="725" y1="528" x2="765" y2="528" stroke="#64748B" stroke-width="2" marker-end="url(#arrowDown)"/>
+  <text x="775" y="532" font-size="10" fill="#475569">Data Flow</text>
+
+  <line x1="725" y1="552" x2="765" y2="552" stroke="#10B981" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="775" y="556" font-size="10" fill="#475569">IaC Manages</text>
+
+  <line x1="725" y1="576" x2="765" y2="576" stroke="#6366F1" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="775" y="580" font-size="10" fill="#475569">CI/CD Deploy</text>
+
+  <!-- Footer -->
+  <text x="450" y="700" text-anchor="middle" font-size="10" fill="#94A3B8">TODO Web App - Serverless Architecture on AWS</text>
+</svg>
