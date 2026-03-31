@@ -28,13 +28,13 @@
 
 ### 1.1 프로젝트 초기화 (7pt)
 
-- [ ] **(1pt)** `packages/frontend`에 Vite + React + TypeScript 프로젝트 생성
-- [ ] **(2pt)** Mantine 설치 및 설정 (`@mantine/core`, `@mantine/hooks`, `@mantine/dates`, `@mantine/notifications`, `@mantine/form`)
-- [ ] **(1pt)** `MantineProvider` + `Notifications` 프로바이더 설정 (`main.tsx`)
-- [ ] **(1pt)** Mantine 테마 커스터마이징 (`theme.ts` — primaryColor, fontFamily, defaultRadius)
-- [ ] **(1pt)** ESLint + Prettier 설정
-- [ ] **(1pt)** Jest + React Testing Library 설치 및 설정
-- [ ] **(1pt)** 프로젝트 디렉토리 구조 생성:
+- [x] **(1pt)** `packages/frontend`에 Vite + React + TypeScript 프로젝트 생성
+- [x] **(2pt)** Mantine 설치 및 설정 (`@mantine/core`, `@mantine/hooks`, `@mantine/dates`, `@mantine/notifications`, `@mantine/form`)
+- [x] **(1pt)** `MantineProvider` + `Notifications` 프로바이더 설정 (`main.tsx`)
+- [x] **(1pt)** Mantine 테마 커스터마이징 (`theme.ts` — primaryColor, fontFamily, defaultRadius)
+- [x] **(1pt)** ESLint + Prettier 설정
+- [x] **(1pt)** Jest + React Testing Library 설치 및 설정
+- [x] **(1pt)** 프로젝트 디렉토리 구조 생성:
   ```
   src/
   ├── assets/            # 정적 자산
@@ -92,8 +92,8 @@
 
 ### 1.7 Git Hooks & 자동화 (2pt)
 
-- [ ] **(1pt)** Husky 설치 및 `.husky/pre-commit` 설정
-- [ ] **(1pt)** pre-commit hook 구성 (프론트엔드 실행 코드 변경 시 lint fix → build → test 자동 수행)
+- [x] **(1pt)** Husky 설치 및 `.husky/pre-commit` 설정
+- [x] **(1pt)** pre-commit hook 구성 (프론트엔드 실행 코드 변경 시 lint fix → build → test 자동 수행)
 
 ### 1.8 Phase 1 검증 (2pt)
 

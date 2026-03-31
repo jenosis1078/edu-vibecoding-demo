@@ -443,10 +443,12 @@ class TodoStack extends Stack {
 
 1. Vite + React + TypeScript + Mantine 프로젝트 초기화 (`packages/frontend`)
 2. `@todo-app/shared`에서 타입 import 확인
-3. Zustand 스토어 구현 (로컬 스토리지 연동)
-4. UI 컴포넌트 구현 (TodoForm, TodoList, TodoItem, TodoSearch, TodoFilter)
-5. 검색(제목), 필터(우선순위), 정렬 기능 구현
-6. 접근성(a11y) 적용 (ARIA 속성, 키보드 네비게이션)
+3. ESLint + Prettier 설정, Jest + React Testing Library 설정
+4. Husky pre-commit hook 구성 (프론트엔드 실행 코드 변경 시 lint fix → build → test 자동 수행)
+5. Context + useReducer 기반 상태 관리 구현 (StorageService 인터페이스를 통한 로컬 스토리지 연동)
+6. UI 컴포넌트 구현 (TodoForm, TodoList, TodoItem, TodoSearch, TodoFilter)
+7. 검색(제목), 필터(우선순위), 정렬 기능 구현
+8. 접근성(a11y) 적용 (ARIA 속성, 키보드 네비게이션)
 
 > 이 단계에서 백엔드 없이 로컬 스토리지만으로 완전한 CRUD 동작
 
@@ -481,8 +483,9 @@ class TodoStack extends Stack {
 | 프로젝트 구조 | 모노레포 (npm workspaces) |
 | 프론트엔드 | React, TypeScript, Vite |
 | UI 라이브러리 | Mantine v7 (@mantine/core, hooks, dates, notifications, form) |
-| 상태 관리 | Zustand (TODO), React Context (인증) |
+| 상태 관리 | React Context + useReducer (TODO), React Context (인증) |
 | 테스트 | Jest, React Testing Library |
+| 코드 품질 | ESLint, Prettier, Husky (pre-commit hook) |
 | 백엔드 | AWS Lambda (Node.js / TypeScript) |
 | 데이터베이스 | Amazon DynamoDB |
 | 인증 | AWS Cognito |

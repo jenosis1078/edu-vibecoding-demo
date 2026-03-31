@@ -10,6 +10,7 @@
 | 프론트엔드 | React, TypeScript, Vite, Mantine v7 |
 | 상태 관리 | React Context + useReducer |
 | 테스트 | Jest, React Testing Library |
+| 코드 품질 | ESLint, Prettier, Husky (pre-commit hook) |
 | 백엔드 | AWS Lambda (Node.js / TypeScript) |
 | 데이터베이스 | Amazon DynamoDB |
 | 인증 | AWS Cognito |
@@ -45,7 +46,23 @@ npm test
 
 # 프론트엔드 빌드
 npm run build:frontend
+
+# ESLint 검사 및 자동 수정
+npm run lint -w @todo-app/frontend
+
+# 코드 포맷팅
+npm run format -w @todo-app/frontend
 ```
+
+## Git Hooks
+
+Husky pre-commit hook이 설정되어 있어, `packages/frontend/src/` 내 실행 코드(ts/tsx/js/jsx) 변경 시 커밋 전 자동으로 다음이 수행됩니다:
+
+1. **ESLint --fix** (lint-staged를 통해 staged 파일 대상)
+2. **빌드** (`tsc -b && vite build`)
+3. **테스트** (`jest`)
+
+비프론트엔드 파일만 변경할 경우 hook은 스킵됩니다.
 
 ## 주요 기능
 
