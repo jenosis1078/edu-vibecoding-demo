@@ -15,6 +15,8 @@
     "test:shared": "npm test -w @todo-app/shared",
     "test:frontend": "npm test -w @todo-app/frontend",
     "test:backend": "npm test -w @todo-app/backend",
+    "lint": "npm run lint -w @todo-app/frontend",
+    "format": "npm run format -w @todo-app/frontend",
     "prepare": "husky"
   },
   "lint-staged": {

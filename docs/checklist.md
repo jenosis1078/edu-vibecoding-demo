@@ -53,42 +53,42 @@
 
 ### 1.2 스토리지 서비스 구현 (5pt) — TDD
 
-- [ ] **(1pt)** `StorageService` 인터페이스 정의 (`getTodos`, `saveTodos`)
-- [ ] **(2pt)** **테스트 작성**: `LocalStorageService` — getTodos 빈 배열 반환, saveTodos 후 getTodos 데이터 일치 검증
-- [ ] **(2pt)** `LocalStorageService` 구현 (`services/storage/`)
+- [x] **(1pt)** `StorageService` 인터페이스 정의 (`getTodos`, `saveTodos`)
+- [x] **(2pt)** **테스트 작성**: `LocalStorageService` — getTodos 빈 배열 반환, saveTodos 후 getTodos 데이터 일치 검증
+- [x] **(2pt)** `LocalStorageService` 구현 (`services/storage/`)
 
 ### 1.3 상태 관리 구현 (8pt) — TDD
 
-- [ ] **(1pt)** `TodoAction` 타입 정의 (ADD_TODO, UPDATE_TODO, DELETE_TODO, TOGGLE_TODO, SET_TODOS)
-- [ ] **(2pt)** **테스트 작성**: `todoReducer` — ADD_TODO 시 새 TODO 추가 검증
-- [ ] **(2pt)** **테스트 작성**: `todoReducer` — DELETE_TODO 시 목록에서 제거, TOGGLE_TODO 시 completed 반전 검증
-- [ ] **(1pt)** **테스트 작성**: `todoReducer` — SET_TODOS 시 전체 목록 교체 검증
-- [ ] **(3pt)** `todoReducer` 및 `TodoContext` 구현 (Context API + useReducer)
-- [ ] **(1pt)** 로컬 스토리지 연동 (StorageService를 통한 persist) 및 테스트 통과 확인
+- [x] **(1pt)** `TodoAction` 타입 정의 (ADD_TODO, UPDATE_TODO, DELETE_TODO, TOGGLE_TODO, SET_TODOS)
+- [x] **(2pt)** **테스트 작성**: `todoReducer` — ADD_TODO 시 새 TODO 추가 검증
+- [x] **(2pt)** **테스트 작성**: `todoReducer` — DELETE_TODO 시 목록에서 제거, TOGGLE_TODO 시 completed 반전 검증
+- [x] **(1pt)** **테스트 작성**: `todoReducer` — SET_TODOS 시 전체 목록 교체 검증
+- [x] **(3pt)** `todoReducer` 및 `TodoContext` 구현 (Context API + useReducer)
+- [x] **(1pt)** 로컬 스토리지 연동 (StorageService를 통한 persist) 및 테스트 통과 확인
 
 ### 1.4 검색/필터/정렬 로직 (8pt) — TDD
 
-- [ ] **(2pt)** **테스트 작성**: 제목 검색 — 부분 문자열 매칭, 대소문자 무시, 빈 문자열 처리
-- [ ] **(2pt)** **테스트 작성**: 우선순위 필터 — ALL/HIGH/MEDIUM/LOW 필터링 결과 검증
-- [ ] **(2pt)** **테스트 작성**: 정렬 — 생성일순/마감일순/우선순위순/이름순 각각 검증
-- [ ] **(3pt)** 검색/필터/정렬 로직 구현 (순수 함수)
-- [ ] **(1pt)** 모든 검색/필터/정렬 테스트 통과 확인
+- [x] **(2pt)** **테스트 작성**: 제목 검색 — 부분 문자열 매칭, 대소문자 무시, 빈 문자열 처리
+- [x] **(2pt)** **테스트 작성**: 우선순위 필터 — ALL/HIGH/MEDIUM/LOW 필터링 결과 검증
+- [x] **(2pt)** **테스트 작성**: 정렬 — 생성일순/마감일순/우선순위순/이름순 각각 검증
+- [x] **(3pt)** 검색/필터/정렬 로직 구현 (순수 함수)
+- [x] **(1pt)** 모든 검색/필터/정렬 테스트 통과 확인
 
 ### 1.5 UI 컴포넌트 구현 (13pt)
 
-- [ ] **(2pt)** `AppShell` 레이아웃 구성 (`AppShell.Header` + `AppShell.Main` + `Container`)
-- [ ] **(2pt)** Header 컴포넌트 (`Group`, `Title`, `Text`, `Button` — 앱 제목, 사용자 정보, 로그아웃)
-- [ ] **(3pt)** TodoForm 컴포넌트 (`TextInput`, `Textarea`, `Select`, `DatePickerInput`, `Button` + `@mantine/form` 유효성 검증)
-- [ ] **(2pt)** TodoSearch 컴포넌트 (`TextInput` — leftSection에 검색 아이콘)
-- [ ] **(2pt)** TodoFilter 컴포넌트 (`Group`, `Select` × 2 — 우선순위 필터 + 정렬 드롭다운)
-- [ ] **(3pt)** TodoList + TodoItem 컴포넌트 (`Stack`, `Card`, `Group`, `Checkbox`, `Badge`(color: red/yellow/blue), `Text`, `ActionIcon`)
-- [ ] **(1pt)** Footer 컴포넌트
+- [x] **(2pt)** `AppShell` 레이아웃 구성 (`AppShell.Header` + `AppShell.Main` + `Container`)
+- [x] **(2pt)** Header 컴포넌트 (`Group`, `Title`, `Text`, `Button` — 앱 제목, 사용자 정보, 로그아웃)
+- [x] **(3pt)** TodoForm 컴포넌트 (`TextInput`, `Textarea`, `Select`, `DatePickerInput`, `Button` + `@mantine/form` 유효성 검증)
+- [x] **(2pt)** TodoSearch 컴포넌트 (`TextInput` — leftSection에 검색 아이콘)
+- [x] **(2pt)** TodoFilter 컴포넌트 (`Group`, `Select` × 2 — 우선순위 필터 + 정렬 드롭다운)
+- [x] **(3pt)** TodoList + TodoItem 컴포넌트 (`Stack`, `Card`, `Group`, `Checkbox`, `Badge`(color: red/yellow/blue), `Text`, `ActionIcon`)
+- [x] **(1pt)** Footer 컴포넌트
 
 ### 1.6 통합 및 접근성 (5pt)
 
-- [ ] **(2pt)** App.tsx에서 전체 컴포넌트 조합 및 데이터 흐름 연결
-- [ ] **(2pt)** ARIA 속성 적용 (role, aria-label, aria-checked 등)
-- [ ] **(1pt)** 키보드 네비게이션 (Tab, Enter, Space) 동작 확인
+- [x] **(2pt)** App.tsx에서 전체 컴포넌트 조합 및 데이터 흐름 연결
+- [x] **(2pt)** ARIA 속성 적용 (role, aria-label, aria-checked 등)
+- [x] **(1pt)** 키보드 네비게이션 (Tab, Enter, Space) 동작 확인
 
 ### 1.7 Git Hooks & 자동화 (2pt)
 
@@ -97,8 +97,8 @@
 
 ### 1.8 Phase 1 검증 (2pt)
 
-- [ ] **(1pt)** 전체 테스트 스위트 통과 (`npm test -w @todo-app/frontend`)
-- [ ] **(1pt)** 수동 확인: 로컬 스토리지 기반 CRUD + 검색/필터/정렬 동작 검증
+- [x] **(1pt)** 전체 테스트 스위트 통과 (`npm test -w @todo-app/frontend`)
+- [x] **(1pt)** 수동 확인: 로컬 스토리지 기반 CRUD + 검색/필터/정렬 동작 검증
 
 ---
 
