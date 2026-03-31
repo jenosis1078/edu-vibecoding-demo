@@ -14,6 +14,16 @@
     "test": "npm run test --workspaces --if-present",
     "test:shared": "npm test -w @todo-app/shared",
     "test:frontend": "npm test -w @todo-app/frontend",
-    "test:backend": "npm test -w @todo-app/backend"
+    "test:backend": "npm test -w @todo-app/backend",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "packages/frontend/src/**/*.{ts,tsx,js,jsx}": [
+      "eslint --fix"
+    ]
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0"
   }
 }
