@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  test:
+    name: Lint, Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint (frontend)
+        run: npm run lint
+
+      - name: Build (frontend)
+        run: npm run build:frontend
+
+      - name: Test (shared)
+        run: npm test -w @todo-app/shared
+
+      - name: Test (frontend)
+        run: npm test -w @todo-app/frontend
