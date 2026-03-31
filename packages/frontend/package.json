@@ -12,12 +12,12 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-    "@todo-app/shared": "*",
     "@mantine/core": "^7.15.0",
-    "@mantine/hooks": "^7.15.0",
     "@mantine/dates": "^7.15.0",
-    "@mantine/notifications": "^7.15.0",
     "@mantine/form": "^7.15.0",
+    "@mantine/hooks": "^7.15.0",
+    "@mantine/notifications": "^7.15.0",
+    "@todo-app/shared": "*",
     "dayjs": "^1.11.13",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -26,6 +26,7 @@
     "@eslint/js": "^9.18.0",
     "@testing-library/jest-dom": "^6.6.0",
     "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^29.5.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
