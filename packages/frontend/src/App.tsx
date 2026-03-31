@@ -43,13 +43,16 @@ export function App() {
   };
 
   return (
-    <AppShell header={{ height: 60 }} padding="md">
+    <AppShell
+      header={{ height: { base: 50, sm: 60 } }}
+      padding="md"
+    >
       <AppShell.Header>
         <Header />
       </AppShell.Header>
       <AppShell.Main>
         <Container size="sm">
-          <Stack gap="md">
+          <Stack gap="sm">
             <TodoForm onSubmit={handleAddTodo} />
             <TodoSearch value={searchQuery} onChange={setSearchQuery} />
             <TodoFilter
@@ -57,6 +60,7 @@ export function App() {
               sortOption={sortOption}
               onPriorityChange={setPriorityFilter}
               onSortChange={setSortOption}
+              totalCount={filteredTodos.length}
             />
             <TodoList
               todos={filteredTodos}

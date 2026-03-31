@@ -13,6 +13,7 @@ export function TodoSearch({ value, onChange }: TodoSearchProps) {
       value={value}
       onChange={(e) => onChange(e.currentTarget.value)}
       aria-label="TODO 검색"
+      size="sm"
     />
   );
 }

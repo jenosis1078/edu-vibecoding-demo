@@ -1,4 +1,4 @@
-import { Group, Select } from '@mantine/core';
+import { Group, Select, Badge } from '@mantine/core';
 import { Priority } from '@todo-app/shared/src/types/todo';
 import { PriorityFilter, SortOption } from '../../utils/todoFilters';
 
@@ -7,6 +7,7 @@ interface TodoFilterProps {
   sortOption: SortOption;
   onPriorityChange: (value: PriorityFilter) => void;
   onSortChange: (value: SortOption) => void;
+  totalCount: number;
 }
 
 const priorityFilterOptions = [
@@ -23,15 +24,16 @@ const sortOptions = [
   { value: 'title', label: '이름순' },
 ];
 
-export function TodoFilter({ priorityFilter, sortOption, onPriorityChange, onSortChange }: TodoFilterProps) {
+export function TodoFilter({ priorityFilter, sortOption, onPriorityChange, onSortChange, totalCount }: TodoFilterProps) {
   return (
-    <Group grow>
+    <Group grow align="flex-end">
       <Select
-        label="우선순위 필터"
+        label="필터"
         data={priorityFilterOptions}
         value={priorityFilter}
         onChange={(v) => onPriorityChange((v as PriorityFilter) || 'ALL')}
         allowDeselect={false}
+        size="xs"
         aria-label="우선순위 필터"
       />
       <Select
@@ -40,8 +42,12 @@ export function TodoFilter({ priorityFilter, sortOption, onPriorityChange, onSor
         value={sortOption}
         onChange={(v) => onSortChange((v as SortOption) || 'createdAt')}
         allowDeselect={false}
+        size="xs"
         aria-label="정렬 기준"
       />
+      <Badge variant="light" size="lg" style={{ alignSelf: 'flex-end', marginBottom: 2 }}>
+        {totalCount}건
+      </Badge>
     </Group>
   );
 }

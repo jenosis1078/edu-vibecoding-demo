@@ -11,7 +11,7 @@ interface TodoListProps {
 export function TodoList({ todos, onToggle, onDelete }: TodoListProps) {
   if (todos.length === 0) {
     return (
-      <Text c="dimmed" ta="center" py="xl">
+      <Text c="dimmed" ta="center" py="xl" fz="sm">
         할 일이 없습니다.
       </Text>
     );
