@@ -19,7 +19,7 @@
   },
   "lint-staged": {
     "packages/frontend/src/**/*.{ts,tsx,js,jsx}": [
-      "eslint --fix"
+      "eslint --config packages/frontend/eslint.config.js --fix"
     ]
   },
   "devDependencies": {
