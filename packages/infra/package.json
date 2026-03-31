@@ -1,0 +1,10 @@
+{
+  "name": "@todo-app/infra",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "deploy": "cdk deploy",
+    "synth": "cdk synth"
+  }
+}

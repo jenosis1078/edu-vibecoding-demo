@@ -45,12 +45,13 @@
 | # | 질문 | 선택지/예시 | 결정 사항 |
 |---|------|------------|----------|
 | Q16 | 프론트엔드 프레임워크는? | React | |
-| Q17 | UI 라이브러리? | Tailwind | |
+| Q17 | UI 라이브러리? | Mantine (React UI 컴포넌트 라이브러리) | |
 | Q18 | 상태관리? | React Context + userReducer, Zustand(로컬 스토리지 연동) | |
 | Q19 | 테스트? | Jest, React Testing Library | |
 | Q20 | 빌드 도구 | Vite | |
 | Q21 | 백엔드 | Node.js (TypeScript) | |
 | Q22 | 인프라 | AWS CDK로 서버리스 (API Gateway, Lambda, DynamoDB) 아키텍처 사용 | |
+| Q23 | 프로젝트 구조 | 모노레포 (npm workspaces) — 프론트엔드·백엔드·인프라·공유 타입을 단일 저장소에서 관리 | |
 
 ### 2.5 UI/UX
 
@@ -105,6 +106,7 @@
 
 - 데모용 프로젝트이므로 빠른 개발이 가능한 기술 스택 우선
 - 복잡한 서버 인프라 없이 구동 가능해야 함
+- 프론트엔드·백엔드·인프라를 모노레포로 관리하여 공유 타입의 일관성을 유지
 
 ---
 

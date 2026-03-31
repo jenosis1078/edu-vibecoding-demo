@@ -4,80 +4,159 @@
 
 ![System Architecture](/05차시_프로젝트%20기획%20및%20설계-20251002T130745Z-1-001/docs/images/architecture.svg)
 
-- **클라이언트**: React + Vite + Tailwind (GitHub Pages 배포)
+- **클라이언트**: React + Vite + Mantine (GitHub Pages 배포)
 - **인증**: AWS Cognito (이메일/비밀번호)
 - **API**: API Gateway (REST) + Cognito Authorizer
 - **비즈니스 로직**: AWS Lambda (Node.js 20.x / TypeScript) - 4개 함수
 - **데이터베이스**: DynamoDB (PK: userId, SK: id)
 - **인프라 관리**: AWS CDK (TypeScript)로 전체 서버리스 스택 정의 및 배포
+- **프로젝트 구조**: 모노레포 (npm workspaces) — 프론트엔드·백엔드·인프라·공유 타입을 단일 저장소에서 관리
 - **CI/CD**: GitHub Actions → GitHub Pages 자동 배포
 
 ---
 
-## 2. 프로젝트 디렉토리 구조
+## 2. 프로젝트 디렉토리 구조 (모노레포)
+
+npm workspaces를 사용하여 프론트엔드·백엔드·인프라·공유 타입을 단일 저장소에서 관리한다.
 
 ```
-todo-app/
-├── frontend/                    # React 프론트엔드
-│   ├── public/
-│   ├── src/
-│   │   ├── components/          # UI 컴포넌트
-│   │   │   ├── Auth/
-│   │   │   │   ├── LoginForm.tsx
-│   │   │   │   └── SignUpForm.tsx
-│   │   │   ├── Todo/
-│   │   │   │   ├── TodoItem.tsx
-│   │   │   │   ├── TodoList.tsx
-│   │   │   │   ├── TodoForm.tsx
-│   │   │   │   ├── TodoFilter.tsx
-│   │   │   │   └── TodoSearch.tsx
-│   │   │   └── Layout/
-│   │   │       ├── Header.tsx
-│   │   │       └── Footer.tsx
-│   │   ├── hooks/               # 커스텀 훅
-│   │   │   ├── useTodos.ts
-│   │   │   └── useAuth.ts
-│   │   ├── store/               # 상태 관리
-│   │   │   ├── todoStore.ts     # Zustand (로컬 스토리지 연동)
-│   │   │   └── authContext.tsx   # React Context (인증)
-│   │   ├── api/                 # API 클라이언트
-│   │   │   └── todoApi.ts
-│   │   ├── types/               # TypeScript 타입 정의
-│   │   │   └── todo.ts
-│   │   ├── App.tsx
-│   │   └── main.tsx
-│   ├── index.html
-│   ├── vite.config.ts
-│   ├── tailwind.config.js
-│   ├── tsconfig.json
-│   └── package.json
+todo-app/                        # 모노레포 루트
+├── package.json                 # 루트 package.json (workspaces 설정)
+├── tsconfig.base.json           # 공통 TypeScript 설정
+├── .gitignore
+├── .github/
+│   └── workflows/
+│       └── deploy-frontend.yml  # GitHub Actions CI/CD
 │
-├── backend/                     # Lambda 함수
-│   ├── src/
-│   │   ├── handlers/            # Lambda 핸들러
-│   │   │   ├── createTodo.ts
-│   │   │   ├── getTodos.ts
-│   │   │   ├── deleteTodo.ts
-│   │   │   └── toggleTodo.ts
-│   │   ├── models/              # 데이터 모델
-│   │   │   └── todo.ts
-│   │   └── utils/               # 유틸리티
-│   │       └── dynamodb.ts
-│   ├── tsconfig.json
-│   └── package.json
-│
-├── infra/                       # AWS CDK 인프라
-│   ├── lib/
-│   │   └── todo-stack.ts
-│   ├── bin/
-│   │   └── app.ts
-│   ├── cdk.json
-│   ├── tsconfig.json
-│   └── package.json
-│
-└── .github/
-    └── workflows/
-        └── deploy-frontend.yml  # GitHub Actions CI/CD
+├── packages/
+│   ├── shared/                  # 공유 타입·유틸리티 (@todo-app/shared)
+│   │   ├── src/
+│   │   │   └── types/
+│   │   │       └── todo.ts      # Todo, Priority 타입 정의
+│   │   ├── package.json
+│   │   └── tsconfig.json
+│   │
+│   ├── frontend/                # React 프론트엔드 (@todo-app/frontend)
+│   │   ├── public/
+│   │   ├── src/
+│   │   │   ├── components/      # UI 컴포넌트
+│   │   │   │   ├── Auth/
+│   │   │   │   │   ├── LoginForm.tsx
+│   │   │   │   │   └── SignUpForm.tsx
+│   │   │   │   ├── Todo/
+│   │   │   │   │   ├── TodoItem.tsx
+│   │   │   │   │   ├── TodoList.tsx
+│   │   │   │   │   ├── TodoForm.tsx
+│   │   │   │   │   ├── TodoFilter.tsx
+│   │   │   │   │   └── TodoSearch.tsx
+│   │   │   │   └── Layout/
+│   │   │   │       ├── Header.tsx
+│   │   │   │       └── Footer.tsx
+│   │   │   ├── hooks/           # 커스텀 훅
+│   │   │   │   ├── useTodos.ts
+│   │   │   │   └── useAuth.ts
+│   │   │   ├── store/           # 상태 관리
+│   │   │   │   ├── todoStore.ts # Zustand (로컬 스토리지 연동)
+│   │   │   │   └── authContext.tsx  # React Context (인증)
+│   │   │   ├── api/             # API 클라이언트
+│   │   │   │   └── todoApi.ts
+│   │   │   ├── theme.ts         # Mantine 테마 커스터마이징
+│   │   │   ├── App.tsx
+│   │   │   └── main.tsx
+│   │   ├── index.html
+│   │   ├── vite.config.ts
+│   │   ├── tsconfig.json        # extends ../../tsconfig.base.json
+│   │   └── package.json
+│   │
+│   ├── backend/                 # Lambda 함수 (@todo-app/backend)
+│   │   ├── src/
+│   │   │   ├── handlers/        # Lambda 핸들러
+│   │   │   │   ├── createTodo.ts
+│   │   │   │   ├── getTodos.ts
+│   │   │   │   ├── deleteTodo.ts
+│   │   │   │   └── toggleTodo.ts
+│   │   │   └── utils/           # 유틸리티
+│   │   │       └── dynamodb.ts
+│   │   ├── tsconfig.json        # extends ../../tsconfig.base.json
+│   │   └── package.json
+│   │
+│   └── infra/                   # AWS CDK 인프라 (@todo-app/infra)
+│       ├── lib/
+│       │   └── todo-stack.ts
+│       ├── bin/
+│       │   └── app.ts
+│       ├── cdk.json
+│       ├── tsconfig.json        # extends ../../tsconfig.base.json
+│       └── package.json
+```
+
+### 2.1 모노레포 설정
+
+#### 루트 package.json
+
+```json
+{
+  "name": "todo-app",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:frontend": "npm run dev -w @todo-app/frontend",
+    "build:frontend": "npm run build -w @todo-app/frontend",
+    "build:backend": "npm run build -w @todo-app/backend",
+    "build:shared": "npm run build -w @todo-app/shared",
+    "build:all": "npm run build:shared && npm run build:frontend && npm run build:backend",
+    "deploy:infra": "npm run deploy -w @todo-app/infra"
+  }
+}
+```
+
+#### 공유 타입 패키지 (packages/shared)
+
+프론트엔드와 백엔드에서 동일한 `Todo`, `Priority` 타입을 사용하기 위해 공유 패키지로 분리한다.
+
+```json
+{
+  "name": "@todo-app/shared",
+  "version": "1.0.0",
+  "main": "src/types/todo.ts",
+  "types": "src/types/todo.ts"
+}
+```
+
+프론트엔드·백엔드에서 의존성으로 참조:
+```json
+{
+  "dependencies": {
+    "@todo-app/shared": "*"
+  }
+}
+```
+
+사용 예시:
+```typescript
+import { Todo, Priority } from '@todo-app/shared/src/types/todo';
+```
+
+#### tsconfig.base.json (루트 공통 설정)
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
+  }
+}
 ```
 
 ---
@@ -180,7 +259,73 @@ enum Priority {
 
 ## 5. 프론트엔드 설계
 
-### 5.1 상태 관리 전략
+### 5.1 UI 라이브러리 — Mantine
+
+Mantine v7을 사용하여 UI를 구성한다.
+
+#### 사용 패키지
+
+| 패키지 | 용도 |
+|--------|------|
+| `@mantine/core` | 기본 UI 컴포넌트 (Button, TextInput, Checkbox, Badge, Card, Select 등) |
+| `@mantine/hooks` | 유틸리티 훅 (useDisclosure, useLocalStorage 등) |
+| `@mantine/dates` | 마감일 입력용 DatePickerInput |
+| `@mantine/notifications` | TODO 생성/삭제 시 알림 토스트 |
+| `@mantine/form` | 폼 유효성 검사 (TodoForm, LoginForm, SignUpForm) |
+
+#### Mantine 프로바이더 설정
+
+```tsx
+// main.tsx
+import { MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
+import { theme } from './theme';
+import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
+import '@mantine/notifications/styles.css';
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <MantineProvider theme={theme}>
+    <Notifications position="top-right" />
+    <App />
+  </MantineProvider>
+);
+```
+
+#### 테마 커스터마이징
+
+```typescript
+// theme.ts
+import { createTheme } from '@mantine/core';
+
+export const theme = createTheme({
+  primaryColor: 'blue',
+  fontFamily: 'Pretendard, -apple-system, sans-serif',
+  defaultRadius: 'md',
+  components: {
+    Button: { defaultProps: { size: 'sm' } },
+    TextInput: { defaultProps: { size: 'sm' } },
+    Select: { defaultProps: { size: 'sm' } },
+  },
+});
+```
+
+#### 주요 컴포넌트 매핑
+
+| 화면 요소 | Mantine 컴포넌트 |
+|-----------|-----------------|
+| TODO 입력 폼 | `TextInput`, `Textarea`, `Select`, `DatePickerInput`, `Button` |
+| TODO 항목 | `Card`, `Checkbox`, `Badge`, `ActionIcon`, `Group`, `Text` |
+| TODO 리스트 | `Stack`, `ScrollArea` |
+| 검색 바 | `TextInput` (leftSection에 검색 아이콘) |
+| 필터/정렬 | `Select`, `Group` |
+| 로그인/회원가입 | `Paper`, `TextInput`, `PasswordInput`, `Button`, `Tabs` |
+| 헤더 | `AppShell.Header`, `Group`, `Title`, `Button` |
+| 우선순위 뱃지 | `Badge` (color: red/yellow/blue) |
+| 알림 | `notifications.show()` |
+| 레이아웃 | `AppShell`, `Container` |
+
+### 5.2 상태 관리 전략
 
 ```
 ┌─────────────────────────────────────────┐
@@ -203,7 +348,7 @@ enum Priority {
 - **TODO 데이터**: Zustand로 관리 (로컬 스토리지에 캐시하여 로딩 UX 개선)
 - **개발 초기**: 로컬 스토리지만으로 동작 → 백엔드 완성 후 API 연결
 
-### 5.2 화면 구성
+### 5.3 화면 구성
 
 #### Desktop View (1280px)
 
@@ -224,21 +369,25 @@ enum Priority {
 - 필터/정렬: 가로 2분할 드롭다운
 - 삭제 버튼: 축약 표시 (Del)
 
-### 5.3 컴포넌트 트리
+### 5.4 컴포넌트 트리
 
 ```
-App
+App (MantineProvider + Notifications)
 ├── AuthProvider (Context)
-│   ├── LoginForm
-│   └── SignUpForm
+│   ├── LoginForm          — Paper, Tabs, TextInput, PasswordInput, Button
+│   └── SignUpForm         — Paper, TextInput, PasswordInput, Button
 └── AuthenticatedApp
-    ├── Header (사용자 정보, 로그아웃)
-    ├── TodoForm (새 TODO 입력)
-    ├── TodoSearch (제목 검색)
-    ├── TodoFilter (우선순위 필터 + 정렬 선택)
-    ├── TodoList
-    │   └── TodoItem (체크박스, 내용, 삭제 버튼)
-    └── Footer
+    └── AppShell
+        ├── AppShell.Header
+        │   └── Header     — Group, Title, Text, Button
+        ├── AppShell.Main
+        │   ├── Container
+        │   │   ├── TodoForm    — TextInput, Textarea, Select, DatePickerInput, Button
+        │   │   ├── TodoSearch  — TextInput (leftSection: IconSearch)
+        │   │   ├── TodoFilter  — Group, Select × 2
+        │   │   ├── TodoList    — Stack
+        │   │   │   └── TodoItem — Card, Group, Checkbox, Badge, Text, ActionIcon
+        │   │   └── Footer
 ```
 
 ---
@@ -281,10 +430,19 @@ class TodoStack extends Stack {
 
 ## 7. 개발 단계별 마일스톤
 
+### Phase 0: 모노레포 초기화
+
+1. 루트 `package.json` 생성 (npm workspaces 설정)
+2. `tsconfig.base.json` 생성 (공통 TypeScript 설정)
+3. `packages/shared` 패키지 생성 — `Todo`, `Priority` 타입 정의
+4. `packages/frontend`, `packages/backend`, `packages/infra` 디렉토리 구성
+5. 각 패키지의 `tsconfig.json`이 루트 `tsconfig.base.json`을 extends 하도록 설정
+6. `.gitignore` 설정
+
 ### Phase 1: 프론트엔드 단독 동작
 
-1. Vite + React + TypeScript + Tailwind 프로젝트 초기화
-2. 타입 정의 (`Todo`, `Priority`)
+1. Vite + React + TypeScript + Mantine 프로젝트 초기화 (`packages/frontend`)
+2. `@todo-app/shared`에서 타입 import 확인
 3. Zustand 스토어 구현 (로컬 스토리지 연동)
 4. UI 컴포넌트 구현 (TodoForm, TodoList, TodoItem, TodoSearch, TodoFilter)
 5. 검색(제목), 필터(우선순위), 정렬 기능 구현
@@ -320,8 +478,9 @@ class TodoStack extends Stack {
 
 | 영역 | 기술 |
 |------|------|
+| 프로젝트 구조 | 모노레포 (npm workspaces) |
 | 프론트엔드 | React, TypeScript, Vite |
-| 스타일링 | Tailwind CSS |
+| UI 라이브러리 | Mantine v7 (@mantine/core, hooks, dates, notifications, form) |
 | 상태 관리 | Zustand (TODO), React Context (인증) |
 | 테스트 | Jest, React Testing Library |
 | 백엔드 | AWS Lambda (Node.js / TypeScript) |

@@ -1,0 +1,19 @@
+{
+  "name": "todo-app",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:frontend": "npm run dev -w @todo-app/frontend",
+    "build:frontend": "npm run build -w @todo-app/frontend",
+    "build:backend": "npm run build -w @todo-app/backend",
+    "build:shared": "npm run build -w @todo-app/shared",
+    "build:all": "npm run build:shared && npm run build:frontend && npm run build:backend",
+    "deploy:infra": "npm run deploy -w @todo-app/infra",
+    "test": "npm run test --workspaces --if-present",
+    "test:shared": "npm test -w @todo-app/shared",
+    "test:frontend": "npm test -w @todo-app/frontend",
+    "test:backend": "npm test -w @todo-app/backend"
+  }
+}

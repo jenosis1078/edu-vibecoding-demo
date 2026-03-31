@@ -1,3 +1,22 @@
+## 커뮤니케이션
 - 커뮤니케이션은 한국어로 해줘
-- 코어 비즈니스 로직 구현시에는 TDD로 구현할 것
-- 
+
+## 프로젝트 구조
+- 모노레포(npm workspaces) 구조: packages/shared, packages/frontend, packages/backend, packages/infra
+- 공유 타입(Todo, Priority)은 @todo-app/shared 패키지에서 관리하고, 프론트엔드·백엔드에서 import하여 사용
+- 각 패키지의 tsconfig.json은 루트 tsconfig.base.json을 extends
+
+## 프론트엔드
+- UI 라이브러리는 Mantine v7 사용 (@mantine/core, hooks, dates, notifications, form)
+- 상태 관리는 React Context API + useReducer 사용
+- 데이터 저장은 StorageService 인터페이스를 통해 추상화 (현재 LocalStorageService 구현)
+- Clean Architecture와 SOLID 원칙 기반으로 설계
+
+## 개발 방식
+- 프론트엔드 UI 구현시에는 실행 코드를 먼저 작성한다. 코어 비즈니스 로직 구현 시에만 TDD로 진행할 것
+- 백엔드는 TDD로 구현할 것
+- 프론트엔드 실행 코드(js/ts/tsx) 변경 시 pre-commit hook(husky)을 통해 lint fix, build, test 자동 수행
+
+## 문서 관리
+- 커밋 전에 docs/checklist.md에 진행상황을 업데이트 한다
+- 설계 변경시에는 docs/requirements.md와 docs/design.md를 수정한다
