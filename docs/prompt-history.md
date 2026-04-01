@@ -150,3 +150,13 @@
   1. CDK 프로젝트 초기화 (cdk.json, bin/app.ts, 의존성)
   2. Lambda 핸들러 4개 + DynamoDB 유틸리티 (TDD, 15 tests)
   3. CDK 풀스택 — API Gateway(IAM인증) + Cognito Identity Pool(비인증) + 스택 테스트 (9 tests)
+
+### #26
+- **프롬프트**: `docs/tasks.md의 이후 진행될 작업들에 대해서 커밋해야 할 내용들, 즉, 인수조건(AC)를 명시해줘.`
+- **의도**: 각 작업 항목에 명확한 완료 기준을 추가하여, 커밋 전 검증 포인트를 구체화
+- **결과**: Phase 2.6, Phase 3 전항목, Phase 4 전항목에 AC(Acceptance Criteria) 추가. 테스트 통과 조건, 빌드 성공 조건, 수동 검증 항목 등 구체적 기준 명시
+
+### #27
+- **프롬프트**: `백엔드의 경우, CDK를 사용해서 비즈니스로직과 인프라 관리를 함께 진행해야 해. 그에 맞춰서 문서를 추가 또는 수정해서 다시 작성해줘.`
+- **의도**: CDK 스택과 Lambda 비즈니스 로직이 하나의 패키지에 있으므로, 이를 통합적으로 설명하는 설계 문서 필요
+- **결과**: `docs/design/backend.md` 신규 생성 (패키지 구조, CDK 리소스 구성, Lambda 핸들러 패턴, DynamoDB 유틸, 테스트 전략, 배포). `infrastructure.md`를 배포/운영 전용으로 축소. 인덱스(design.md, README.md) 및 .cursorrules 참조 업데이트

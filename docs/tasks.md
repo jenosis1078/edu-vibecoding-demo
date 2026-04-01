@@ -157,7 +157,10 @@
 
 - [x] **(1pt)** 전체 백엔드 테스트 통과 (`npm test -w @todo-app/backend`)
 - [ ] **(1pt)** CDK synth 성공 확인
+  - **AC**: `npm run synth -w @todo-app/backend` 실행 시 에러 없이 `cdk.out/` 생성
 - [ ] **(1pt)** `cdk deploy`로 AWS 리소스 배포 및 수동 API 테스트 (curl/Postman)
+  - **AC**: DynamoDB 테이블, Lambda 4개, API Gateway, Cognito Identity Pool이 AWS 콘솔에서 확인됨
+  - **AC**: curl로 API Gateway URL에 요청 시 정상 응답 (SigV4 서명 포함)
 
 ---
 
@@ -166,26 +169,38 @@
 ### 3.1 Cognito Identity Pool 연동 (3pt)
 
 - [ ] **(1pt)** `@aws-sdk/client-cognito-identity` 설치 및 설정
+  - **AC**: `npm install` 후 import 에러 없이 빌드 성공
 - [ ] **(1pt)** 비인증 자격증명 발급 서비스 구현 (identityId + 임시 자격증명)
+  - **AC**: `services/auth/cognitoService.ts` 생성, `getCredentials()` 호출 시 accessKeyId, secretAccessKey, sessionToken 반환
 - [ ] **(1pt)** 자격증명 캐싱 (세션 중 재사용)
+  - **AC**: 동일 세션에서 `getCredentials()` 재호출 시 새 API 요청 없이 캐시된 자격증명 반환
 
 ### 3.2 API 클라이언트 (5pt) — TDD
 
 - [ ] **(2pt)** **테스트 작성**: API 호출 함수 (createTodo, getTodos, deleteTodo, toggleTodo) — mock 기반
+  - **AC**: 각 함수가 올바른 HTTP 메서드/경로로 호출되는지 검증하는 테스트 4개 이상
 - [ ] **(1pt)** **테스트 작성**: SigV4 서명이 요청에 포함되는지 검증
+  - **AC**: 요청 헤더에 `Authorization`, `X-Amz-Date`, `X-Amz-Security-Token` 존재 확인
 - [ ] **(1pt)** **테스트 작성**: API 에러 응답 처리 (403, 404, 500)
+  - **AC**: 각 에러 코드별 적절한 에러 객체가 throw/반환되는지 검증
 - [ ] **(3pt)** `services/todoApi.ts` 구현 (SigV4 서명 + API 호출)
+  - **AC**: 위 테스트 전체 통과, `npm run build -w @todo-app/frontend` 성공
 
 ### 3.3 상태 관리 API 연결 (3pt) — TDD
 
 - [ ] **(1pt)** **테스트 작성**: Context 액션 호출 시 API 호출 + 로컬 상태 동기화 검증
+  - **AC**: addTodo 호출 → API createTodo 호출 + todos 배열에 추가 검증
 - [ ] **(1pt)** **테스트 작성**: API 에러 시 에러 상태 설정 검증
+  - **AC**: API 실패 시 error 상태가 설정되고, todos는 변경되지 않음
 - [ ] **(2pt)** TodoContext를 API 호출 기반으로 전환 (로컬 스토리지는 캐시로 유지)
+  - **AC**: 위 테스트 전체 통과, 로컬 스토리지에도 동기화되어 오프라인 캐시 역할 수행
 
 ### 3.4 Phase 3 검증 (2pt)
 
 - [ ] **(1pt)** 전체 테스트 통과 (`npm test -w @todo-app/frontend`)
+  - **AC**: 기존 41 tests + 새 API/Context 테스트 포함, 전체 통과
 - [ ] **(1pt)** TODO CRUD → 새로고침 후 DynamoDB 데이터 유지 확인
+  - **AC**: 브라우저에서 TODO 추가 → 새로고침 → 동일 데이터 표시 (DynamoDB에서 재조회)
 
 ---
 
@@ -195,17 +210,24 @@
 
 - [x] **(2pt)** CI 워크플로 작성 (`.github/workflows/ci.yml` — lint → build → test)
 - [ ] **(1pt)** GitHub Pages 자동 배포 워크플로 추가
+  - **AC**: `.github/workflows/deploy.yml` 생성, master push 시 빌드 → gh-pages 브랜치 배포
+  - **AC**: `https://<username>.github.io/edu-vibecoding-demo/` 접속 시 앱 렌더링
 
 ### 4.2 최종 배포 (3pt)
 
 - [ ] **(1pt)** CDK로 프로덕션 AWS 인프라 배포
+  - **AC**: `npm run deploy -w @todo-app/backend` 성공, CloudFormation 스택 CREATE_COMPLETE
 - [ ] **(1pt)** GitHub Pages에 프론트엔드 배포
+  - **AC**: GitHub Pages URL에서 TODO 앱 정상 로딩
 - [ ] **(1pt)** 환경변수 설정 (API Gateway URL, Cognito Identity Pool ID)
+  - **AC**: GitHub Secrets에 `VITE_API_URL`, `VITE_IDENTITY_POOL_ID`, `VITE_REGION` 설정, 빌드 시 주입 확인
 
 ### 4.3 최종 검증 (2pt)
 
 - [ ] **(1pt)** 프로덕션 환경 전체 기능 테스트
+  - **AC**: GitHub Pages에서 TODO CRUD + 검색/필터/정렬 + 새로고침 데이터 유지 확인
 - [ ] **(1pt)** CI/CD 파이프라인 동작 확인 (push → 자동 빌드 → 배포)
+  - **AC**: master에 push 후 GitHub Actions가 CI 통과 → GitHub Pages 자동 배포 → 사이트 업데이트 확인
 
 ---
 
