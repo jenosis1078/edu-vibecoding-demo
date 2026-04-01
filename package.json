@@ -17,7 +17,9 @@
     "test:frontend": "npm test -w @todo-app/frontend",
     "test:backend": "npm test -w @todo-app/backend",
     "lint": "npm run lint -w @todo-app/frontend",
+    "lint:backend": "npm run lint -w @todo-app/backend",
     "format": "npm run format -w @todo-app/frontend",
+    "format:backend": "npm run format -w @todo-app/backend",
     "prepare": "husky"
   },
   "lint-staged": {
