@@ -142,3 +142,11 @@
 - **프롬프트**: `백엔드와 프론트엔드도 각각의 설계문서를 참조하도록 규칙을 업데이트 해줘`
 - **의도**: 프론트엔드/백엔드 섹션에서 직접 관련 설계 문서를 참조하여, 작업 시 별도로 찾지 않아도 되도록
 - **결과**: .cursorrules의 프론트엔드 섹션에 `docs/design/frontend.md`, 백엔드 섹션 신규 추가하여 `docs/design/api.md`, `infrastructure.md`, `data-model.md` 참조 명시
+
+### #25
+- **프롬프트**: `docs/tasks.md의 다음 작업을 진행해줘`
+- **의도**: Phase 2 백엔드 구현 시작
+- **결과**: Phase 2 전체 구현 완료 (24 tests). 3개 커밋으로 작업 단위별 분리:
+  1. CDK 프로젝트 초기화 (cdk.json, bin/app.ts, 의존성)
+  2. Lambda 핸들러 4개 + DynamoDB 유틸리티 (TDD, 15 tests)
+  3. CDK 풀스택 — API Gateway(IAM인증) + Cognito Identity Pool(비인증) + 스택 테스트 (9 tests)

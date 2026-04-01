@@ -106,56 +106,56 @@
 
 ### 2.1 CDK 프로젝트 초기화 (3pt)
 
-- [ ] **(1pt)** `packages/backend`에 CDK 프로젝트 설정 (`cdk.json`, `bin/app.ts`)
-- [ ] **(1pt)** CDK 및 Lambda 의존성 설치 (`aws-cdk-lib`, `aws-lambda-nodejs` 등)
-- [ ] **(1pt)** TodoStack 클래스 기본 구조 작성 (`lib/todo-stack.ts`)
+- [x] **(1pt)** `packages/backend`에 CDK 프로젝트 설정 (`cdk.json`, `bin/app.ts`)
+- [x] **(1pt)** CDK 및 Lambda 의존성 설치 (`aws-cdk-lib`, `aws-lambda-nodejs` 등)
+- [x] **(1pt)** TodoStack 클래스 기본 구조 작성 (`lib/todo-stack.ts`)
 
 ### 2.2 DynamoDB 테이블 (3pt) — TDD
 
-- [ ] **(1pt)** **테스트 작성**: CDK 스냅샷 테스트 — DynamoDB 테이블 리소스 존재, PK/SK 설정 검증
-- [ ] **(2pt)** CDK에서 DynamoDB 테이블 정의 (PK: userId, SK: id, PAY_PER_REQUEST)
+- [x] **(1pt)** **테스트 작성**: CDK 스냅샷 테스트 — DynamoDB 테이블 리소스 존재, PK/SK 설정 검증
+- [x] **(2pt)** CDK에서 DynamoDB 테이블 정의 (PK: userId, SK: id, PAY_PER_REQUEST)
 
 ### 2.3 Lambda 핸들러 구현 (14pt) — TDD
 
 #### createTodo (4pt)
 
-- [ ] **(2pt)** **테스트 작성**: 유효한 요청 → UUID 생성, DynamoDB PutItem 호출, 201 응답
-- [ ] **(1pt)** **테스트 작성**: 필수 필드 누락 시 400 에러 응답
-- [ ] **(2pt)** `src/handlers/createTodo.ts` 핸들러 구현
+- [x] **(2pt)** **테스트 작성**: 유효한 요청 → UUID 생성, DynamoDB PutItem 호출, 201 응답
+- [x] **(1pt)** **테스트 작성**: 필수 필드 누락 시 400 에러 응답
+- [x] **(2pt)** `src/handlers/createTodo.ts` 핸들러 구현
 
 #### getTodos (3pt)
 
-- [ ] **(1pt)** **테스트 작성**: userId로 Query 호출, TODO 목록 반환
-- [ ] **(1pt)** **테스트 작성**: TODO가 없을 때 빈 배열 반환
-- [ ] **(2pt)** `src/handlers/getTodos.ts` 핸들러 구현
+- [x] **(1pt)** **테스트 작성**: userId로 Query 호출, TODO 목록 반환
+- [x] **(1pt)** **테스트 작성**: TODO가 없을 때 빈 배열 반환
+- [x] **(2pt)** `src/handlers/getTodos.ts` 핸들러 구현
 
 #### deleteTodo (3pt)
 
-- [ ] **(1pt)** **테스트 작성**: 유효한 id → DynamoDB DeleteItem 호출, 200 응답
-- [ ] **(1pt)** **테스트 작성**: 존재하지 않는 id → 404 에러 응답
-- [ ] **(2pt)** `src/handlers/deleteTodo.ts` 핸들러 구현
+- [x] **(1pt)** **테스트 작성**: 유효한 id → DynamoDB DeleteItem 호출, 200 응답
+- [x] **(1pt)** **테스트 작성**: 존재하지 않는 id → 404 에러 응답
+- [x] **(2pt)** `src/handlers/deleteTodo.ts` 핸들러 구현
 
 #### toggleTodo (4pt)
 
-- [ ] **(1pt)** **테스트 작성**: completed: false → true 로 토글
-- [ ] **(1pt)** **테스트 작성**: completed: true → false 로 토글
-- [ ] **(1pt)** **테스트 작성**: 존재하지 않는 id → 404 에러 응답
-- [ ] **(2pt)** `src/handlers/toggleTodo.ts` 핸들러 구현
+- [x] **(1pt)** **테스트 작성**: completed: false → true 로 토글
+- [x] **(1pt)** **테스트 작성**: completed: true → false 로 토글
+- [x] **(1pt)** **테스트 작성**: 존재하지 않는 id → 404 에러 응답
+- [x] **(2pt)** `src/handlers/toggleTodo.ts` 핸들러 구현
 
 ### 2.4 DynamoDB 유틸리티 (2pt) — TDD
 
-- [ ] **(1pt)** **테스트 작성**: DynamoDB 클라이언트 래퍼 함수 (put, query, delete, update)
-- [ ] **(1pt)** `src/utils/dynamodb.ts` 구현
+- [x] **(1pt)** **테스트 작성**: DynamoDB 클라이언트 래퍼 함수 (put, query, delete, update)
+- [x] **(1pt)** `src/utils/dynamodb.ts` 구현
 
 ### 2.5 API Gateway + Cognito Identity Pool (CDK) (3pt)
 
-- [ ] **(1pt)** Cognito Identity Pool 정의 (비인증 접근 활성화 + IAM Role)
-- [ ] **(1pt)** API Gateway REST API 정의 (리소스, 메서드, `NodejsFunction` Lambda 연결)
-- [ ] **(1pt)** IAM 인증 + CORS 설정
+- [x] **(1pt)** Cognito Identity Pool 정의 (비인증 접근 활성화 + IAM Role)
+- [x] **(1pt)** API Gateway REST API 정의 (리소스, 메서드, `NodejsFunction` Lambda 연결)
+- [x] **(1pt)** IAM 인증 + CORS 설정
 
 ### 2.6 Phase 2 검증 (3pt)
 
-- [ ] **(1pt)** 전체 백엔드 테스트 통과 (`npm test -w @todo-app/backend`)
+- [x] **(1pt)** 전체 백엔드 테스트 통과 (`npm test -w @todo-app/backend`)
 - [ ] **(1pt)** CDK synth 성공 확인
 - [ ] **(1pt)** `cdk deploy`로 AWS 리소스 배포 및 수동 API 테스트 (curl/Postman)
 
