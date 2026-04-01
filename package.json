@@ -23,6 +23,10 @@
   "lint-staged": {
     "packages/frontend/src/**/*.{ts,tsx,js,jsx}": [
       "eslint --config packages/frontend/eslint.config.js --fix"
+    ],
+    "packages/backend/{src,lib,bin,test}/**/*.ts": [
+      "eslint --config packages/backend/eslint.config.js --fix",
+      "prettier --write"
     ]
   },
   "devDependencies": {

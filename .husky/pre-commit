@@ -12,7 +12,7 @@ echo "📋 staged 파일 목록:"
 echo "$STAGED_FILES" | sed 's/^/   /'
 echo ""
 
-# 프론트엔드 실행 코드(ts/tsx/js/jsx) 변경 감지
+# ========== 프론트엔드 ==========
 FRONTEND_CHANGED=$(echo "$STAGED_FILES" | grep -E '^packages/frontend/src/.*\.(ts|tsx|js|jsx)$' || true)
 
 if [ -n "$FRONTEND_CHANGED" ]; then
@@ -20,9 +20,8 @@ if [ -n "$FRONTEND_CHANGED" ]; then
   echo "$FRONTEND_CHANGED" | sed 's/^/   ▸ /'
   echo ""
 
-  # 1. lint-staged
   echo "----------------------------------------"
-  echo "  [1/3] 🧹 ESLint --fix (lint-staged)"
+  echo "  [FE 1/3] 🧹 ESLint --fix (lint-staged)"
   echo "----------------------------------------"
   npx lint-staged --allow-empty
   LINT_EXIT=$?
@@ -33,9 +32,8 @@ if [ -n "$FRONTEND_CHANGED" ]; then
   echo "✔ lint 통과"
   echo ""
 
-  # 2. build
   echo "----------------------------------------"
-  echo "  [2/3] 📦 프론트엔드 빌드"
+  echo "  [FE 2/3] 📦 프론트엔드 빌드"
   echo "----------------------------------------"
   npm run build -w @todo-app/frontend
   BUILD_EXIT=$?
@@ -46,9 +44,8 @@ if [ -n "$FRONTEND_CHANGED" ]; then
   echo "✔ 빌드 통과"
   echo ""
 
-  # 3. test
   echo "----------------------------------------"
-  echo "  [3/3] 🧪 프론트엔드 테스트"
+  echo "  [FE 3/3] 🧪 프론트엔드 테스트"
   echo "----------------------------------------"
   npm test -w @todo-app/frontend
   TEST_EXIT=$?
@@ -64,6 +61,59 @@ if [ -n "$FRONTEND_CHANGED" ]; then
   echo "========================================"
 else
   echo "⏭  프론트엔드 실행 코드 변경 없음 — 검증 스킵"
+fi
+
+echo ""
+
+# ========== 백엔드 ==========
+BACKEND_CHANGED=$(echo "$STAGED_FILES" | grep -E '^packages/backend/(src|lib|bin|test)/.*\.ts$' || true)
+
+if [ -n "$BACKEND_CHANGED" ]; then
+  echo "🔍 백엔드 실행 코드 변경 감지:"
+  echo "$BACKEND_CHANGED" | sed 's/^/   ▸ /'
+  echo ""
+
+  echo "----------------------------------------"
+  echo "  [BE 1/3] 🧹 ESLint --fix + Prettier (lint-staged)"
+  echo "----------------------------------------"
+  npx lint-staged --allow-empty
+  LINT_EXIT=$?
+  if [ $LINT_EXIT -ne 0 ]; then
+    echo "❌ lint-staged 실패 (exit code: $LINT_EXIT)"
+    exit 1
+  fi
+  echo "✔ lint + format 통과"
+  echo ""
+
+  echo "----------------------------------------"
+  echo "  [BE 2/3] 📦 백엔드 빌드 (tsc)"
+  echo "----------------------------------------"
+  npm run build -w @todo-app/backend
+  BUILD_EXIT=$?
+  if [ $BUILD_EXIT -ne 0 ]; then
+    echo "❌ 빌드 실패 (exit code: $BUILD_EXIT)"
+    exit 1
+  fi
+  echo "✔ 빌드 통과"
+  echo ""
+
+  echo "----------------------------------------"
+  echo "  [BE 3/3] 🧪 백엔드 테스트"
+  echo "----------------------------------------"
+  npm test -w @todo-app/backend
+  TEST_EXIT=$?
+  if [ $TEST_EXIT -ne 0 ]; then
+    echo "❌ 테스트 실패 (exit code: $TEST_EXIT)"
+    exit 1
+  fi
+  echo "✔ 테스트 통과"
+  echo ""
+
+  echo "========================================"
+  echo "  ✅ 백엔드 검증 완료 (3/3 통과)"
+  echo "========================================"
+else
+  echo "⏭  백엔드 실행 코드 변경 없음 — 검증 스킵"
 fi
 
 echo ""
