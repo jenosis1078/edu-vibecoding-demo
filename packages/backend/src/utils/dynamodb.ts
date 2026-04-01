@@ -26,9 +26,7 @@ export async function queryItems(userId: string): Promise<Record<string, unknown
 }
 
 export async function deleteItem(userId: string, id: string): Promise<void> {
-  await client.send(
-    new DeleteCommand({ TableName: tableName(), Key: { userId, id } }),
-  );
+  await client.send(new DeleteCommand({ TableName: tableName(), Key: { userId, id } }));
 }
 
 export async function updateItem(

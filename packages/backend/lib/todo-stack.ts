@@ -95,22 +95,32 @@ export class TodoStack extends cdk.Stack {
 
     // /todos
     const todosResource = api.root.addResource('todos');
-    todosResource.addMethod('POST', new apigateway.LambdaIntegration(createTodo), { authorizationType: iamAuth });
-    todosResource.addMethod('GET', new apigateway.LambdaIntegration(getTodos), { authorizationType: iamAuth });
+    todosResource.addMethod('POST', new apigateway.LambdaIntegration(createTodo), {
+      authorizationType: iamAuth,
+    });
+    todosResource.addMethod('GET', new apigateway.LambdaIntegration(getTodos), {
+      authorizationType: iamAuth,
+    });
 
     // /todos/{id}
     const todoIdResource = todosResource.addResource('{id}');
-    todoIdResource.addMethod('DELETE', new apigateway.LambdaIntegration(deleteTodo), { authorizationType: iamAuth });
+    todoIdResource.addMethod('DELETE', new apigateway.LambdaIntegration(deleteTodo), {
+      authorizationType: iamAuth,
+    });
 
     // /todos/{id}/toggle
     const toggleResource = todoIdResource.addResource('toggle');
-    toggleResource.addMethod('PATCH', new apigateway.LambdaIntegration(toggleTodo), { authorizationType: iamAuth });
+    toggleResource.addMethod('PATCH', new apigateway.LambdaIntegration(toggleTodo), {
+      authorizationType: iamAuth,
+    });
 
     // 비인증 Role에 API Gateway invoke 권한 부여
-    unauthRole.addToPolicy(new iam.PolicyStatement({
-      actions: ['execute-api:Invoke'],
-      resources: [api.arnForExecuteApi('*', '/*', '*')],
-    }));
+    unauthRole.addToPolicy(
+      new iam.PolicyStatement({
+        actions: ['execute-api:Invoke'],
+        resources: [api.arnForExecuteApi('*', '/*', '*')],
+      }),
+    );
 
     // Outputs
     new cdk.CfnOutput(this, 'ApiUrl', { value: api.url });
