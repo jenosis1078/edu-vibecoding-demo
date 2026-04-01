@@ -29,7 +29,7 @@
 
 | # | 질문 | 선택지/예시 | 결정 사항 |
 |---|------|------------|----------|
-| Q11 | 로그인/회원가입 기능이 필요한가? | 필요(단일 사용자), AWS Congnito로 로그인/회원가입 구현현 | |
+| Q11 | 로그인/회원가입 기능이 필요한가? | 불필요. Cognito Identity Pool로 비인증 사용자 식별 | |
 | Q12 | 소셜 로그인을 지원할 것인가? | 없음 | |
 | Q13 | 여러 사용자 간 TODO 공유 기능이 필요한가? | 불필요 | |
 
@@ -46,18 +46,18 @@
 |---|------|------------|----------|
 | Q16 | 프론트엔드 프레임워크는? | React | |
 | Q17 | UI 라이브러리? | Mantine (React UI 컴포넌트 라이브러리) | |
-| Q18 | 상태관리? | React Context + userReducer, Zustand(로컬 스토리지 연동) | |
+| Q18 | 상태관리? | React Context + useReducer (StorageService 추상화) | |
 | Q19 | 테스트? | Jest, React Testing Library | |
 | Q20 | 빌드 도구 | Vite | |
 | Q21 | 백엔드 | Node.js (TypeScript) | |
 | Q22 | 인프라 | AWS CDK로 서버리스 (API Gateway, Lambda, DynamoDB) 아키텍처 사용 | |
-| Q23 | 프로젝트 구조 | 모노레포 (npm workspaces) — 프론트엔드·백엔드·인프라·공유 타입을 단일 저장소에서 관리 | |
+| Q23 | 프로젝트 구조 | 모노레포 (npm workspaces) — shared, frontend, backend(CDK+Lambda 통합) 3패키지 | |
 
 ### 2.5 UI/UX
 
 | # | 질문 | 선택지/예시 | 결정 사항 |
 |---|------|------------|----------|
-| Q20 | 반응형 디자인(모바일 대응)이 필요한가? |  불필요 | |
+| Q20 | 반응형 디자인(모바일 대응)이 필요한가? | 필요 (Mantine v7 반응형) | |
 | Q21 | 다크 모드를 지원할 것인가? |  불필요 | |
 | Q22 | 드래그 앤 드롭으로 순서 변경이 필요한가? |  불필요 | |
 | Q23 | 애니메이션/트랜지션 효과는? | 없음 | |
@@ -99,6 +99,56 @@
 - [ ] 검색 및 필터링
 - [ ] 드래그 앤 드롭 정렬
 - [ ] 다크 모드
+
+---
+
+## 3.3 백엔드 요건
+
+### 아키텍처
+
+- **AWS 서버리스 아키텍처** 사용
+- API Gateway (REST) → Lambda → DynamoDB
+- 인프라 코드(IaC): AWS CDK (TypeScript) — `NodejsFunction`으로 Lambda 자동 번들링
+- CI/CD: GitHub Actions
+- backend 패키지에 CDK 스택 + Lambda 핸들러를 통합 관리 (infra 패키지 없음)
+
+### 권한 제어 (Cognito Identity Pool)
+
+- 로그인/회원가입 UI는 **불필요**
+- **Cognito Identity Pool**의 비인증(unauthenticated) 접근을 활성화하여 익명 사용자를 식별
+- 각 브라우저 세션에 고유한 `identityId`가 부여되어 사용자별 TODO 데이터를 격리
+- API Gateway에 IAM 인증 적용 → Cognito Identity Pool이 발급한 임시 자격증명으로 API 호출
+
+### API 설계
+
+| 메서드 | 경로 | 설명 | 요청 Body |
+|--------|------|------|-----------|
+| `POST` | `/todos` | TODO 생성 | `{ title, description?, priority, dueDate }` |
+| `GET` | `/todos` | 사용자별 TODO 목록 조회 | - |
+| `DELETE` | `/todos/{id}` | TODO 삭제 | - |
+| `PATCH` | `/todos/{id}/toggle` | 완료/미완료 토글 | - |
+
+- userId는 Cognito Identity Pool의 `identityId`에서 추출
+- 수정(PUT) 엔드포인트는 없음 (Q9: 불필요)
+
+### DynamoDB 테이블
+
+| 속성 | 타입 | 키 | 설명 |
+|------|------|-----|------|
+| `userId` | String | Partition Key (PK) | Cognito Identity ID |
+| `id` | String | Sort Key (SK) | TODO UUID |
+| `title` | String | - | 제목 (필수, 최대 100자) |
+| `description` | String | - | 설명 (선택, 최대 500자) |
+| `priority` | String | - | HIGH / MEDIUM / LOW |
+| `dueDate` | String | - | 마감일 (ISO 8601) |
+| `completed` | Boolean | - | 완료 여부 |
+| `createdAt` | String | - | 생성일시 (ISO 8601) |
+
+### 배포
+
+- 백엔드 인프라: `cdk deploy`로 AWS에 배포
+- 프론트엔드: GitHub Actions → GitHub Pages 자동 배포
+- 환경변수: API Gateway URL, Cognito Identity Pool ID
 
 ---
 

@@ -252,7 +252,7 @@ describe('todoReducer', () => {
 
 ### Git & 자동화
 
-- 커밋 전 `docs/checklist.md`에 진행 상황 업데이트
+- 커밋 전 `docs/tasks.md`에 진행 상황 업데이트
 - 설계 변경 시 `docs/requirements.md`와 `docs/design.md` 수정
 - pre-commit hook (Husky): 프론트엔드 실행 코드 변경 시 lint fix → build → test 자동 수행
 

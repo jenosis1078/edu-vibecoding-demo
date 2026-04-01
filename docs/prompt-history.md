@@ -1,0 +1,124 @@
+# 프롬프트 히스토리
+
+> 바이브 코딩 학습용 프로젝트의 프롬프트 기록
+> 형식: 프롬프트 원문 → 의도 → 결과 요약
+
+---
+
+## Phase 0: 모노레포 초기화
+
+### #1
+- **프롬프트**: `체크리스트에 맞춰서 작업을 시작하자.`
+- **의도**: docs/checklist.md의 Phase 0부터 순서대로 프로젝트 구조를 생성
+- **결과**: 루트 package.json(npm workspaces), tsconfig.base.json, .gitignore, 4개 패키지(shared/frontend/backend/infra) 디렉토리 및 설정 파일, Todo/Priority 공유 타입 + 테스트 5개 작성. Phase 0 (8pt) 완료
+
+### #2
+- **프롬프트**: `프로젝트 설명을 위한 README를 root 폴더에 만들어줘`
+- **의도**: 프로젝트 소개 문서 생성
+- **결과**: README.md 생성 (기술 스택, 구조, 시작 방법, 주요 기능, 개발 단계, 문서 링크)
+
+### #3
+- **프롬프트**: `변경사항을 커밋해줘`
+- **의도**: Phase 0 작업물 버전 관리
+- **결과**: `feat: Phase 0 모노레포 초기화 및 공유 타입 패키지 구성` 커밋 (21파일)
+
+---
+
+## 규칙 파일 설정
+
+### #4
+- **프롬프트**: `@https://github.com/PatrickJS/awesome-cursorrules/... 를 참고해서 이 프로젝트의 아키텍처와 요구사항을 반영한 규칙 파일을 docs에 cursorrules.md에 만들어줘`
+- **의도**: 참조 프로젝트의 AI 코딩 규칙 구조를 본뜨되, 이 프로젝트의 기술 스택과 요건에 맞게 커스터마이징
+- **결과**: docs/cursorrules.md 생성 (분석 프로세스, 프로젝트 구조, 코드 스타일, 프론트엔드/백엔드 규칙, TDD 원칙, 기능 요건 요약)
+
+### #5
+- **프롬프트**: `기존 규칙도 새규칙에 반영해줘`
+- **의도**: .cursorrules의 기존 규칙(Clean Architecture, SOLID 등)이 누락되지 않도록 보장
+- **결과**: docs/cursorrules.md에 "Clean Architecture와 SOLID 원칙" 항목 추가
+
+---
+
+## Phase 1: 프론트엔드
+
+### #6
+- **프롬프트**: `이어서 docs/checklist.md의 프론트엔드 프로젝트 설정을 진행하자`
+- **의도**: Phase 1.1 프로젝트 초기화 시작
+- **결과**: Vite+React+TS+Mantine 프로젝트 구성, ESLint/Prettier/Jest 설정, 디렉토리 구조 생성, tsc/vite build/jest 모두 통과. Phase 1.1 (7pt) 완료
+
+### #7
+- **프롬프트**: `git hook을 이용해서 커밋시에 lint fix, build, test가 자동으로 수행되도록 하고 싶어. 실행 코드에 변경시에만 작동되어야 해.`
+- **의도**: 프론트엔드 코드 품질 자동화 (CI 게이트 역할)
+- **결과**: Husky + lint-staged 설정. pre-commit hook이 packages/frontend/src/ 내 ts/tsx 변경 감지 시 lint→build→test 실행. Windows 호환성 이슈 해결 (grep 기반 감지, || true). Phase 1.7 (2pt) 완료
+
+### #8
+- **프롬프트**: `나는 프론트 개발을 독립적으로 완료하고 그 다음 백엔드에 연결하는 방식으로 개발하고 싶어.`
+- **의도**: 개발 순서 확립 (프론트 단독 완성 → 백엔드 → 연동)
+- **결과**: 개발 방식 피드백 저장. Phase 1→2→3 순서 확정
+
+### #9
+- **프롬프트**: `응` (Phase 1.2~1.4 진행 승인)
+- **의도**: 비즈니스 로직 TDD 구현 시작
+- **결과**: StorageService+LocalStorageService (TDD, 6 tests), todoReducer+TodoContext (TDD, 9 tests), 검색/필터/정렬 순수 함수 (TDD, 14 tests). 29/29 전체 통과
+
+### #10
+- **프롬프트**: `체크리스트에 따라서 다음 작업을 진행해줘`
+- **의도**: Phase 1.5~1.6 UI 컴포넌트 구현 및 통합
+- **결과**: Header, Footer, TodoForm, TodoSearch, TodoFilter, TodoList, TodoItem 구현. App.tsx에서 전체 통합 + ARIA 접근성 적용. 빌드/테스트 통과
+
+### #11
+- **프롬프트**: `이제부터 Mantine v7으로 구현해줘. 최신버전의 사용법은 @https://mantine.dev/ 를 참고해서 구현해줘. 모바일과 데스크톱 모두 대응되는 반응형 디자인으로 작성해줘.`
+- **의도**: Mantine v7 공식 문서 기반으로 반응형 UI로 리팩토링
+- **결과**: 모든 UI 컴포넌트 반응형 재작성. Header(visibleFrom/hiddenFrom), TodoForm(Collapse 접기/펼치기), TodoItem(컬러바+컴팩트 뱃지), AppShell(반응형 header height). 빌드/테스트 통과
+
+### #12
+- **프롬프트**: `웹 화면에 대한 테스트를 자동화 하고 싶은데, 어떤 방법이 좋을까?` → `React Testing Library로 컴포넌트 통합 테스트를 작성해줘`
+- **의도**: 수동 검증을 자동화하여 regression 방지
+- **결과**: App 컴포넌트 통합 테스트 12개 작성 (렌더링 5, 토글 2, 삭제 2, 검색 3). jsdom polyfill 설정 (crypto, matchMedia, ResizeObserver). 41/41 전체 통과
+
+---
+
+## CI/CD & 인프라
+
+### #13
+- **프롬프트**: `깃허브에 배포할 수 있게 gh cli로 원격 레포지토리를 생성하고 로컬 리포지토리를 연결해줘`
+- **의도**: GitHub 원격 저장소 생성 및 연결
+- **결과**: jenosis1078/edu-vibecoding-demo 레포 생성, origin remote 연결, master 브랜치 push
+
+### #14
+- **프롬프트**: `github actions 실행 결과를 gh cli로 확인해봐` → CI 워크플로 설정
+- **의도**: push 시 자동으로 lint/build/test가 실행되는 CI 파이프라인 구축
+- **결과**: .github/workflows/ci.yml 생성 (lint→build→test). 45초 만에 전체 통과 확인
+
+### #15
+- **프롬프트**: `docs/requirements.md에 백엔드 요건정의를 추가해줘. 백엔드는 AWS 서버리스 아키텍처를 사용. 인증은 필요 없지만 Cognito를 사용해서 로그인 하지 않은 사용자의 권한 제어를 구현해줘.`
+- **의도**: 백엔드 아키텍처 요건 확정 (서버리스, Cognito Identity Pool 비인증 접근)
+- **결과**: requirements.md에 3.3 백엔드 요건 섹션 추가, design.md 인증 흐름을 Cognito Identity Pool 기반으로 전면 변경
+
+---
+
+## 프로젝트 관리
+
+### #16
+- **프롬프트**: `docs/checklist.md 파일명을 tasks.md로 바꾸고, 이 파일을 참조하는 다른 마크다운 문서들도 수정해줘`
+- **의도**: 파일명 개선 (checklist → tasks)
+- **결과**: git mv로 파일명 변경, .cursorrules/docs/cursorrules.md/README.md의 참조 경로 수정
+
+### #17
+- **프롬프트**: `.cursorrules를 설정해줘. 필요한 규칙이 있다면 추가해줘.`
+- **의도**: 현재 프로젝트 상태를 반영한 최신 규칙 파일로 업데이트
+- **결과**: .cursorrules에 반응형 디자인, CI/CD, 코드 스타일, 통합 테스트 규칙 추가
+
+### #18
+- **프롬프트**: `이 프로젝트는 바이브 코딩 학습용 프로젝트야. docs/prompt-history.md 파일에 프롬프트와 결과 요약, 의도를 정리해서 기록하도록 규칙을 생성하고 항상 적용되도록 설정해줘.`
+- **의도**: 프롬프트 히스토리를 학습 자료로 활용하기 위한 문서화 체계 구축
+- **결과**: docs/prompt-history.md 생성 (기존 대화 전체 기록), .cursorrules에 프롬프트 히스토리 규칙 추가
+
+### #19
+- **프롬프트**: `docs/design.md 문서를 방금 업데이트한 docs/requirements.md에 맞춰서 업데이트 해줘.`
+- **의도**: 백엔드 요건 변경(Cognito Identity Pool 비인증, 로그인 제거)을 설계 문서에 일관성 있게 반영
+- **결과**: design.md 전면 수정 — 인증→권한 제어(Identity Pool), Auth 컴포넌트 제거, 상태 관리(Zustand→Context+useReducer), 디렉토리 구조 실제 구현 반영, 컴포넌트 트리 재작성, Phase 2/3 마일스톤 업데이트
+
+### #20
+- **프롬프트**: `requirements.md에 디렉토리 구조가 backend와 infra를 분리하고 있어. aws lambda를 CDK로 개발하는 경우, 하나의 폴더에 관리 할 수 있지 않을까?`
+- **의도**: CDK의 NodejsFunction을 활용하여 backend+infra를 통합, 패키지 수 축소
+- **결과**: 4패키지→3패키지 구조로 변경. infra 패키지 제거, backend에 CDK 스택+Lambda 핸들러 통합. requirements.md, design.md, README.md, .cursorrules, package.json 모두 반영
