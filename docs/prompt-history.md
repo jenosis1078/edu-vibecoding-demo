@@ -160,3 +160,28 @@
 - **프롬프트**: `백엔드의 경우, CDK를 사용해서 비즈니스로직과 인프라 관리를 함께 진행해야 해. 그에 맞춰서 문서를 추가 또는 수정해서 다시 작성해줘.`
 - **의도**: CDK 스택과 Lambda 비즈니스 로직이 하나의 패키지에 있으므로, 이를 통합적으로 설명하는 설계 문서 필요
 - **결과**: `docs/design/backend.md` 신규 생성 (패키지 구조, CDK 리소스 구성, Lambda 핸들러 패턴, DynamoDB 유틸, 테스트 전략, 배포). `infrastructure.md`를 배포/운영 전용으로 축소. 인덱스(design.md, README.md) 및 .cursorrules 참조 업데이트
+
+### #28
+- **프롬프트**: `README.md에 docs 폴더안의 문서들에 대한 설명과 링크도 추가해줘.`
+- **의도**: README에서 프로젝트 문서 전체를 한눈에 파악하고 바로 접근할 수 있도록
+- **결과**: README.md에 프로젝트 관리 4문서 + 설계 7문서 테이블 추가, 개발 단계 포인트 최신화, Cognito 설명 수정
+
+### #29
+- **프롬프트**: `백엔드도 git hook을 사용해서 lint autofix, prettier, build, test가 수행되도록 설정해줘.`
+- **의도**: 프론트엔드와 동일한 코드 품질 자동화를 백엔드에도 적용
+- **결과**: 백엔드 ESLint + Prettier 설정, lint-staged에 백엔드 패턴 추가, pre-commit hook에 BE 감지 블록 추가 (lint+format → tsc → jest). hook 동작 검증 완료
+
+### #30
+- **프롬프트**: `package.json의 백엔드 빌드/검증 관련 스크립트들이 잘 작동하는지 확인하고 다음으로 넘어가자.`
+- **의도**: build:backend, test:backend, lint, format, synth 5개 스크립트 동작 검증
+- **결과**: 5개 모두 통과. synth에서 ts-node ESM 이슈 발견 → tsx로 변경하여 해결. CDK synth로 CloudFormation 템플릿 생성 성공
+
+### #31
+- **프롬프트**: `린트에서 eslint.config.js의 require() 관련된 에러가 발생하지 않도록 설정해줘.`
+- **의도**: ESLint가 자기 설정 파일(.js)을 lint하면서 require() 에러 발생 방지
+- **결과**: eslint.config.js의 ignores에 `**/*.js` 추가
+
+### #32
+- **프롬프트**: (터미널에서 `npm run lint:backend` 실행 시 Missing script 에러)
+- **의도**: 루트에서 `lint:backend`, `format:backend` 명령어로 바로 실행 가능하도록
+- **결과**: 루트 package.json에 `lint:backend`, `format:backend` 스크립트 추가
