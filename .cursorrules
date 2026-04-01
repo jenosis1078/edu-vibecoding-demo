@@ -18,11 +18,12 @@
 - Clean Architecture와 SOLID 원칙 기반으로 설계
 - 접근성(a11y): 모든 인터랙티브 요소에 ARIA 속성 적용, 키보드 네비게이션 지원
 
-## 백엔드 (설계: docs/design/api.md, docs/design/infrastructure.md)
+## 백엔드 (설계: docs/design/backend.md)
 - AWS 서버리스: API Gateway (REST) + Lambda (Node.js 20.x) + DynamoDB
 - CDK + Lambda 통합 패키지: packages/backend (NodejsFunction으로 자동 번들링)
 - 권한 제어: Cognito Identity Pool 비인증 접근 → IAM 인증 → cognitoIdentityId로 사용자 식별
-- 데이터 모델: docs/design/data-model.md 참조
+- API 계약: docs/design/api.md, 데이터 모델: docs/design/data-model.md
+- 배포/운영: docs/design/infrastructure.md
 - TDD로 구현 (테스트 작성 → 구현 → 리팩터링)
 
 ## 코드 스타일
@@ -49,7 +50,8 @@
   - 데이터 모델/DynamoDB → docs/design/data-model.md
   - API 엔드포인트/권한 제어 → docs/design/api.md
   - 프론트엔드 UI/상태 관리 → docs/design/frontend.md
-  - CDK 인프라/배포 → docs/design/infrastructure.md
+  - 백엔드 CDK+Lambda 개발 → docs/design/backend.md
+  - 배포/운영/환경변수 → docs/design/infrastructure.md
   - 전체 아키텍처/기술 스택 → docs/design/README.md
 
 ## 프롬프트 히스토리

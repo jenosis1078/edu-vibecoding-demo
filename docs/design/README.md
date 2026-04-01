@@ -23,6 +23,7 @@
 | [data-model.md](data-model.md) | Todo 데이터 모델, DynamoDB 테이블 설계 |
 | [api.md](api.md) | API 엔드포인트, 응답 형식, 권한 제어 흐름 |
 | [frontend.md](frontend.md) | Mantine UI, 상태 관리, 화면 구성, 컴포넌트 트리 |
+| [backend.md](backend.md) | CDK 스택 + Lambda 핸들러 + DynamoDB 유틸, 테스트 전략 |
 | [infrastructure.md](infrastructure.md) | CDK 스택, 배포 파이프라인 |
 
 ---
