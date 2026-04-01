@@ -122,3 +122,23 @@
 - **프롬프트**: `requirements.md에 디렉토리 구조가 backend와 infra를 분리하고 있어. aws lambda를 CDK로 개발하는 경우, 하나의 폴더에 관리 할 수 있지 않을까?`
 - **의도**: CDK의 NodejsFunction을 활용하여 backend+infra를 통합, 패키지 수 축소
 - **결과**: 4패키지→3패키지 구조로 변경. infra 패키지 제거, backend에 CDK 스택+Lambda 핸들러 통합. requirements.md, design.md, README.md, .cursorrules, package.json 모두 반영
+
+### #21
+- **프롬프트**: `docs/tasks.md도 docs/design.md 업데이트에 맞춰서 업데이트 해줘.`
+- **의도**: 체크리스트(tasks.md)를 변경된 아키텍처(3패키지, Cognito Identity Pool, 로그인 제거)에 맞게 동기화
+- **결과**: Phase 2 전면 재작성(infra→backend 통합, Cognito Identity Pool, NodejsFunction), Phase 3 간소화(로그인 UI 제거, SigV4 서명 기반), Phase 4 CI 항목 체크, 총 포인트 109→97pt 조정
+
+### #22
+- **프롬프트**: `docs/design.md도 크기가 너무 커졌어. 작업 목적에 따라 참고하기 쉽게 docs/design 폴더를 만들고 파일을 분리해서 저장해줘.`
+- **의도**: 500줄짜리 단일 설계 문서를 목적별로 분리하여 필요한 부분만 빠르게 참조
+- **결과**: docs/design/ 폴더에 6개 파일로 분리 (README, project-structure, data-model, api, frontend, infrastructure). 기존 design.md는 인덱스(링크 테이블)로 교체
+
+### #23
+- **프롬프트**: `Cursor Rules에서도 작업 목적에 맞게 분리된 설계문서들을 참조하도록 기존의 규칙을 업데이트 해줘.`
+- **의도**: AI 어시스턴트가 작업 영역에 따라 적절한 설계 문서를 자동으로 참조하도록 규칙 명시
+- **결과**: .cursorrules와 docs/cursorrules.md의 "문서 관리" 섹션을 작업 목적별 설계 문서 매핑으로 업데이트
+
+### #24
+- **프롬프트**: `백엔드와 프론트엔드도 각각의 설계문서를 참조하도록 규칙을 업데이트 해줘`
+- **의도**: 프론트엔드/백엔드 섹션에서 직접 관련 설계 문서를 참조하여, 작업 시 별도로 찾지 않아도 되도록
+- **결과**: .cursorrules의 프론트엔드 섹션에 `docs/design/frontend.md`, 백엔드 섹션 신규 추가하여 `docs/design/api.md`, `infrastructure.md`, `data-model.md` 참조 명시

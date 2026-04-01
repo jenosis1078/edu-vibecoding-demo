@@ -13,7 +13,7 @@
 - [x] **(1pt)** 루트 `package.json` 생성 (npm workspaces 설정: `packages/*`)
 - [x] **(1pt)** `tsconfig.base.json` 생성 (공통 TypeScript 설정)
 - [x] **(1pt)** `.gitignore` 설정 (node_modules, dist, .env 등)
-- [x] **(1pt)** `packages/frontend`, `packages/backend`, `packages/infra`, `packages/shared` 디렉토리 생성
+- [x] **(1pt)** `packages/shared`, `packages/frontend`, `packages/backend` 디렉토리 생성
 - [x] **(1pt)** 각 패키지의 `package.json` 및 `tsconfig.json` 초기화 (`extends ../../tsconfig.base.json`)
 
 ### 0.2 공유 타입 패키지 (3pt) — TDD
@@ -102,60 +102,56 @@
 
 ---
 
-## Phase 2: 백엔드 구현 (총 30pt)
+## Phase 2: 백엔드 구현 (총 28pt)
 
-### 2.1 AWS CDK 프로젝트 초기화 (3pt)
+### 2.1 CDK 프로젝트 초기화 (3pt)
 
-- [ ] **(1pt)** `packages/infra`에 CDK 프로젝트 설정
-- [ ] **(1pt)** TypeScript 설정 및 CDK 의존성 설치
-- [ ] **(1pt)** TodoStack 클래스 기본 구조 작성
+- [ ] **(1pt)** `packages/backend`에 CDK 프로젝트 설정 (`cdk.json`, `bin/app.ts`)
+- [ ] **(1pt)** CDK 및 Lambda 의존성 설치 (`aws-cdk-lib`, `aws-lambda-nodejs` 등)
+- [ ] **(1pt)** TodoStack 클래스 기본 구조 작성 (`lib/todo-stack.ts`)
 
 ### 2.2 DynamoDB 테이블 (3pt) — TDD
 
 - [ ] **(1pt)** **테스트 작성**: CDK 스냅샷 테스트 — DynamoDB 테이블 리소스 존재, PK/SK 설정 검증
 - [ ] **(2pt)** CDK에서 DynamoDB 테이블 정의 (PK: userId, SK: id, PAY_PER_REQUEST)
 
-### 2.3 Lambda 핸들러 구현 (16pt) — TDD
+### 2.3 Lambda 핸들러 구현 (14pt) — TDD
 
 #### createTodo (4pt)
 
 - [ ] **(2pt)** **테스트 작성**: 유효한 요청 → UUID 생성, DynamoDB PutItem 호출, 201 응답
 - [ ] **(1pt)** **테스트 작성**: 필수 필드 누락 시 400 에러 응답
-- [ ] **(2pt)** createTodo 핸들러 구현
-- [ ] **(1pt)** 테스트 통과 확인
+- [ ] **(2pt)** `src/handlers/createTodo.ts` 핸들러 구현
 
 #### getTodos (3pt)
 
 - [ ] **(1pt)** **테스트 작성**: userId로 Query 호출, TODO 목록 반환
 - [ ] **(1pt)** **테스트 작성**: TODO가 없을 때 빈 배열 반환
-- [ ] **(2pt)** getTodos 핸들러 구현
-- [ ] **(1pt)** 테스트 통과 확인
+- [ ] **(2pt)** `src/handlers/getTodos.ts` 핸들러 구현
 
 #### deleteTodo (3pt)
 
 - [ ] **(1pt)** **테스트 작성**: 유효한 id → DynamoDB DeleteItem 호출, 200 응답
 - [ ] **(1pt)** **테스트 작성**: 존재하지 않는 id → 404 에러 응답
-- [ ] **(2pt)** deleteTodo 핸들러 구현
-- [ ] **(1pt)** 테스트 통과 확인
+- [ ] **(2pt)** `src/handlers/deleteTodo.ts` 핸들러 구현
 
 #### toggleTodo (4pt)
 
 - [ ] **(1pt)** **테스트 작성**: completed: false → true 로 토글
 - [ ] **(1pt)** **테스트 작성**: completed: true → false 로 토글
 - [ ] **(1pt)** **테스트 작성**: 존재하지 않는 id → 404 에러 응답
-- [ ] **(2pt)** toggleTodo 핸들러 구현
-- [ ] **(1pt)** 테스트 통과 확인
+- [ ] **(2pt)** `src/handlers/toggleTodo.ts` 핸들러 구현
 
-### 2.4 DynamoDB 유틸리티 (3pt) — TDD
+### 2.4 DynamoDB 유틸리티 (2pt) — TDD
 
 - [ ] **(1pt)** **테스트 작성**: DynamoDB 클라이언트 래퍼 함수 (put, query, delete, update)
-- [ ] **(2pt)** `packages/backend/src/utils/dynamodb.ts` 구현
+- [ ] **(1pt)** `src/utils/dynamodb.ts` 구현
 
-### 2.5 API Gateway + Cognito (CDK) (5pt)
+### 2.5 API Gateway + Cognito Identity Pool (CDK) (3pt)
 
-- [ ] **(2pt)** Cognito User Pool + User Pool Client 정의
-- [ ] **(2pt)** API Gateway REST API 정의 (리소스, 메서드, Lambda 연결)
-- [ ] **(1pt)** Cognito Authorizer 연동 및 CORS 설정
+- [ ] **(1pt)** Cognito Identity Pool 정의 (비인증 접근 활성화 + IAM Role)
+- [ ] **(1pt)** API Gateway REST API 정의 (리소스, 메서드, `NodejsFunction` Lambda 연결)
+- [ ] **(1pt)** IAM 인증 + CORS 설정
 
 ### 2.6 Phase 2 검증 (3pt)
 
@@ -165,51 +161,46 @@
 
 ---
 
-## Phase 3: 프론트-백엔드 연동 (총 21pt)
+## Phase 3: 프론트-백엔드 연동 (총 13pt)
 
-### 3.1 Cognito 인증 연동 (8pt)
+### 3.1 Cognito Identity Pool 연동 (3pt)
 
-- [ ] **(2pt)** AWS Amplify Auth 또는 amazon-cognito-identity-js 설치 및 설정
-- [ ] **(3pt)** authContext 구현 (login, signUp, logout, getCurrentUser)
-- [ ] **(2pt)** LoginForm + SignUpForm 컴포넌트 구현 (`Paper`, `Tabs`, `TextInput`, `PasswordInput`, `Button`)
-- [ ] **(1pt)** 인증 상태에 따른 화면 분기 (미로그인 → LoginForm / 로그인 → TodoApp)
+- [ ] **(1pt)** `@aws-sdk/client-cognito-identity` 설치 및 설정
+- [ ] **(1pt)** 비인증 자격증명 발급 서비스 구현 (identityId + 임시 자격증명)
+- [ ] **(1pt)** 자격증명 캐싱 (세션 중 재사용)
 
 ### 3.2 API 클라이언트 (5pt) — TDD
 
-- [ ] **(2pt)** **테스트 작성**: API 호출 함수 (createTodo, getTodos, deleteTodo, toggleTodo) — mock fetch 기반
-- [ ] **(1pt)** **테스트 작성**: Authorization 헤더에 토큰 포함 검증
-- [ ] **(1pt)** **테스트 작성**: API 에러 응답 처리 (401, 404, 500)
-- [ ] **(3pt)** `packages/frontend/src/services/todoApi.ts` 구현 (fetch 래퍼 + 토큰 자동 첨부)
-- [ ] **(1pt)** 테스트 통과 확인
+- [ ] **(2pt)** **테스트 작성**: API 호출 함수 (createTodo, getTodos, deleteTodo, toggleTodo) — mock 기반
+- [ ] **(1pt)** **테스트 작성**: SigV4 서명이 요청에 포함되는지 검증
+- [ ] **(1pt)** **테스트 작성**: API 에러 응답 처리 (403, 404, 500)
+- [ ] **(3pt)** `services/todoApi.ts` 구현 (SigV4 서명 + API 호출)
 
-### 3.3 상태 관리 API 연결 (5pt) — TDD
+### 3.3 상태 관리 API 연결 (3pt) — TDD
 
-- [ ] **(2pt)** **테스트 작성**: Context 액션 호출 시 API 호출 + 로컬 상태 동기화 검증
+- [ ] **(1pt)** **테스트 작성**: Context 액션 호출 시 API 호출 + 로컬 상태 동기화 검증
 - [ ] **(1pt)** **테스트 작성**: API 에러 시 에러 상태 설정 검증
-- [ ] **(3pt)** TodoContext를 API 호출 기반으로 전환 (로컬 스토리지는 캐시로 유지)
-- [ ] **(1pt)** 테스트 통과 확인
+- [ ] **(2pt)** TodoContext를 API 호출 기반으로 전환 (로컬 스토리지는 캐시로 유지)
 
-### 3.4 Phase 3 검증 (3pt)
+### 3.4 Phase 3 검증 (2pt)
 
 - [ ] **(1pt)** 전체 테스트 통과 (`npm test -w @todo-app/frontend`)
-- [ ] **(1pt)** 로그인 → TODO CRUD → 로그아웃 E2E 수동 테스트
-- [ ] **(1pt)** 새로고침 후 데이터 유지 확인 (DynamoDB에서 재조회)
+- [ ] **(1pt)** TODO CRUD → 새로고침 후 DynamoDB 데이터 유지 확인
 
 ---
 
-## Phase 4: 배포 및 CI/CD (총 10pt)
+## Phase 4: 배포 및 CI/CD (총 8pt)
 
-### 4.1 GitHub Actions CI/CD (5pt)
+### 4.1 GitHub Actions CI/CD (3pt)
 
-- [ ] **(2pt)** 프론트엔드 빌드 + 테스트 워크플로 작성 (`.github/workflows/deploy-frontend.yml`)
-- [ ] **(2pt)** GitHub Pages 자동 배포 설정
-- [ ] **(1pt)** 환경변수 설정 (API Gateway URL, Cognito User Pool ID/Client ID)
+- [x] **(2pt)** CI 워크플로 작성 (`.github/workflows/ci.yml` — lint → build → test)
+- [ ] **(1pt)** GitHub Pages 자동 배포 워크플로 추가
 
 ### 4.2 최종 배포 (3pt)
 
 - [ ] **(1pt)** CDK로 프로덕션 AWS 인프라 배포
 - [ ] **(1pt)** GitHub Pages에 프론트엔드 배포
-- [ ] **(1pt)** CORS 설정 최종 확인 (GitHub Pages 도메인 허용)
+- [ ] **(1pt)** 환경변수 설정 (API Gateway URL, Cognito Identity Pool ID)
 
 ### 4.3 최종 검증 (2pt)
 
@@ -224,7 +215,7 @@
 |-------|------|--------|----------|
 | Phase 0 | 모노레포 초기화 | 8pt | 공유 타입 |
 | Phase 1 | 프론트엔드 단독 동작 | 40pt | 스토리지 서비스, 상태 관리(Reducer), 검색/필터/정렬 |
-| Phase 2 | 백엔드 구현 | 30pt | Lambda 핸들러, DynamoDB 유틸, CDK |
-| Phase 3 | 프론트-백엔드 연동 | 21pt | API 클라이언트, 상태 관리 API 연결 |
-| Phase 4 | 배포 및 CI/CD | 10pt | - |
-| **합계** | | **109pt** | |
+| Phase 2 | 백엔드 구현 (CDK+Lambda 통합) | 28pt | Lambda 핸들러, DynamoDB 유틸, CDK |
+| Phase 3 | 프론트-백엔드 연동 | 13pt | API 클라이언트, 상태 관리 API 연결 |
+| Phase 4 | 배포 및 CI/CD | 8pt | - |
+| **합계** | | **97pt** | |

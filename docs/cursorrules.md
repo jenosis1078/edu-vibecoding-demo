@@ -253,7 +253,13 @@ describe('todoReducer', () => {
 ### Git & 자동화
 
 - 커밋 전 `docs/tasks.md`에 진행 상황 업데이트
-- 설계 변경 시 `docs/requirements.md`와 `docs/design.md` 수정
+- 설계 문서는 작업 목적별로 분리되어 있으며, 해당 영역 변경 시 관련 문서를 수정:
+  - 요건 변경 → `docs/requirements.md`
+  - 프로젝트 구조 → `docs/design/project-structure.md`
+  - 데이터 모델 → `docs/design/data-model.md`
+  - API 설계 → `docs/design/api.md`
+  - 프론트엔드 → `docs/design/frontend.md`
+  - 인프라/배포 → `docs/design/infrastructure.md`
 - pre-commit hook (Husky): 프론트엔드 실행 코드 변경 시 lint fix → build → test 자동 수행
 
 ---

@@ -9,7 +9,7 @@
 - 각 패키지의 tsconfig.json은 루트 tsconfig.base.json을 extends
 - 프론트엔드·백엔드 간 타입 중복 정의 금지
 
-## 프론트엔드
+## 프론트엔드 (설계: docs/design/frontend.md)
 - UI 라이브러리는 Mantine v7 사용 (@mantine/core, hooks, dates, notifications, form)
 - Mantine 컴포넌트를 최우선으로 사용. 직접 HTML 요소를 스타일링하지 않음
 - 반응형 디자인: Mantine의 visibleFrom/hiddenFrom, breakpoint 객체 활용
@@ -17,6 +17,13 @@
 - 데이터 저장은 StorageService 인터페이스를 통해 추상화 (현재 LocalStorageService 구현)
 - Clean Architecture와 SOLID 원칙 기반으로 설계
 - 접근성(a11y): 모든 인터랙티브 요소에 ARIA 속성 적용, 키보드 네비게이션 지원
+
+## 백엔드 (설계: docs/design/api.md, docs/design/infrastructure.md)
+- AWS 서버리스: API Gateway (REST) + Lambda (Node.js 20.x) + DynamoDB
+- CDK + Lambda 통합 패키지: packages/backend (NodejsFunction으로 자동 번들링)
+- 권한 제어: Cognito Identity Pool 비인증 접근 → IAM 인증 → cognitoIdentityId로 사용자 식별
+- 데이터 모델: docs/design/data-model.md 참조
+- TDD로 구현 (테스트 작성 → 구현 → 리팩터링)
 
 ## 코드 스타일
 - 간결하고 읽기 쉬운 TypeScript 코드 작성
@@ -35,8 +42,15 @@
 
 ## 문서 관리
 - 커밋 전에 docs/tasks.md에 진행상황을 업데이트 한다
-- 설계 변경시에는 docs/requirements.md와 docs/design.md를 수정한다
 - 상세 규칙은 docs/cursorrules.md 참고
+- 설계 문서는 작업 목적에 따라 분리되어 있다. 해당 영역 작업 시 관련 문서를 참조한다:
+  - 요건 변경 → docs/requirements.md
+  - 프로젝트 구조/패키지 → docs/design/project-structure.md
+  - 데이터 모델/DynamoDB → docs/design/data-model.md
+  - API 엔드포인트/권한 제어 → docs/design/api.md
+  - 프론트엔드 UI/상태 관리 → docs/design/frontend.md
+  - CDK 인프라/배포 → docs/design/infrastructure.md
+  - 전체 아키텍처/기술 스택 → docs/design/README.md
 
 ## 프롬프트 히스토리
 - 이 프로젝트는 바이브 코딩 학습용 프로젝트이다
