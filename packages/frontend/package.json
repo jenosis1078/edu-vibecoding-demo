@@ -12,11 +12,17 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
+    "@aws-crypto/sha256-browser": "^5.2.0",
+    "@aws-sdk/client-cognito-identity": "^3.1024.0",
+    "@aws-sdk/credential-providers": "^3.1024.0",
+    "@aws-sdk/protocol-http": "^3.370.0",
+    "@aws-sdk/signature-v4": "^3.370.0",
     "@mantine/core": "^7.15.0",
     "@mantine/dates": "^7.15.0",
     "@mantine/form": "^7.15.0",
     "@mantine/hooks": "^7.15.0",
     "@mantine/notifications": "^7.15.0",
+    "@smithy/signature-v4": "^5.3.12",
     "@todo-app/shared": "*",
     "dayjs": "^1.11.13",
     "react": "^19.0.0",
