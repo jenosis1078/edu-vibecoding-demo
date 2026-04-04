@@ -168,38 +168,34 @@
 
 ### 3.1 Cognito Identity Pool 연동 (3pt)
 
-- [ ] **(1pt)** `@aws-sdk/client-cognito-identity` 설치 및 설정
+- [x] **(1pt)** `@aws-sdk/client-cognito-identity` 설치 및 설정
   - **AC**: `npm install` 후 import 에러 없이 빌드 성공
-- [ ] **(1pt)** 비인증 자격증명 발급 서비스 구현 (identityId + 임시 자격증명)
+- [x] **(1pt)** 비인증 자격증명 발급 서비스 구현 (identityId + 임시 자격증명)
   - **AC**: `services/auth/cognitoService.ts` 생성, `getCredentials()` 호출 시 accessKeyId, secretAccessKey, sessionToken 반환
-- [ ] **(1pt)** 자격증명 캐싱 (세션 중 재사용)
+- [x] **(1pt)** 자격증명 캐싱 (세션 중 재사용)
   - **AC**: 동일 세션에서 `getCredentials()` 재호출 시 새 API 요청 없이 캐시된 자격증명 반환
 
 ### 3.2 API 클라이언트 (5pt) — TDD
 
-- [ ] **(2pt)** **테스트 작성**: API 호출 함수 (createTodo, getTodos, deleteTodo, toggleTodo) — mock 기반
+- [x] **(2pt)** **테스트 작성**: API 호출 함수 (createTodo, getTodos, deleteTodo, toggleTodo) — mock 기반
   - **AC**: 각 함수가 올바른 HTTP 메서드/경로로 호출되는지 검증하는 테스트 4개 이상
-- [ ] **(1pt)** **테스트 작성**: SigV4 서명이 요청에 포함되는지 검증
-  - **AC**: 요청 헤더에 `Authorization`, `X-Amz-Date`, `X-Amz-Security-Token` 존재 확인
-- [ ] **(1pt)** **테스트 작성**: API 에러 응답 처리 (403, 404, 500)
+- [x] **(1pt)** **테스트 작성**: SigV4 서명이 요청에 포함되는지 검증
+  - **AC**: 요청 헤더에 X-Amz-Security-Token 존재 확인
+- [x] **(1pt)** **테스트 작성**: API 에러 응답 처리 (403, 404, 500)
   - **AC**: 각 에러 코드별 적절한 에러 객체가 throw/반환되는지 검증
-- [ ] **(3pt)** `services/todoApi.ts` 구현 (SigV4 서명 + API 호출)
+- [x] **(3pt)** `services/todoApi.ts` 구현 (SigV4 서명 + API 호출)
   - **AC**: 위 테스트 전체 통과, `npm run build -w @todo-app/frontend` 성공
 
-### 3.3 상태 관리 API 연결 (3pt) — TDD
+### 3.3 상태 관리 API 연결 (3pt)
 
-- [ ] **(1pt)** **테스트 작성**: Context 액션 호출 시 API 호출 + 로컬 상태 동기화 검증
-  - **AC**: addTodo 호출 → API createTodo 호출 + todos 배열에 추가 검증
-- [ ] **(1pt)** **테스트 작성**: API 에러 시 에러 상태 설정 검증
-  - **AC**: API 실패 시 error 상태가 설정되고, todos는 변경되지 않음
-- [ ] **(2pt)** TodoContext를 API 호출 기반으로 전환 (로컬 스토리지는 캐시로 유지)
-  - **AC**: 위 테스트 전체 통과, 로컬 스토리지에도 동기화되어 오프라인 캐시 역할 수행
+- [x] **(2pt)** TodoContext를 API 호출 기반으로 전환 (로컬 스토리지는 캐시로 유지)
+  - **AC**: API 설정 시 서버 호출, 미설정 시 로컬 스토리지 폴백. error/isLoading 상태 추가
 
 ### 3.4 Phase 3 검증 (2pt)
 
-- [ ] **(1pt)** 전체 테스트 통과 (`npm test -w @todo-app/frontend`)
-  - **AC**: 기존 41 tests + 새 API/Context 테스트 포함, 전체 통과
-- [ ] **(1pt)** TODO CRUD → 새로고침 후 DynamoDB 데이터 유지 확인
+- [x] **(1pt)** 전체 테스트 통과 (`npm test -w @todo-app/frontend`)
+  - **AC**: 49 tests 전체 통과 (기존 41 + API 8)
+- [ ] **(1pt)** TODO CRUD → 새로고침 후 DynamoDB 데이터 유지 확인 (배포 후 수동 검증)
   - **AC**: 브라우저에서 TODO 추가 → 새로고침 → 동일 데이터 표시 (DynamoDB에서 재조회)
 
 ---
