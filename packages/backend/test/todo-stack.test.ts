@@ -71,4 +71,31 @@ describe('TodoStack', () => {
       template.resourceCountIs('AWS::ApiGateway::RestApi', 1);
     });
   });
+
+  describe('Amplify', () => {
+    it('Amplify App이 존재한다', () => {
+      template.resourceCountIs('AWS::Amplify::App', 1);
+    });
+
+    it('Amplify Branch가 master로 설정된다', () => {
+      template.hasResourceProperties('AWS::Amplify::Branch', {
+        BranchName: 'master',
+        Framework: 'React',
+        Stage: 'PRODUCTION',
+        EnableAutoBuild: false,
+      });
+    });
+
+    it('SPA 라우팅 폴백 규칙이 설정된다', () => {
+      template.hasResourceProperties('AWS::Amplify::App', {
+        Platform: 'WEB',
+        CustomRules: Match.arrayWith([
+          Match.objectLike({
+            Target: '/index.html',
+            Status: '200',
+          }),
+        ]),
+      });
+    });
+  });
 });

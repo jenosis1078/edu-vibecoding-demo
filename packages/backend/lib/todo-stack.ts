@@ -5,6 +5,7 @@ import * as lambdaRuntime from 'aws-cdk-lib/aws-lambda';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as amplify from 'aws-cdk-lib/aws-amplify';
 import { Construct } from 'constructs';
 import * as path from 'path';
 
@@ -122,9 +123,40 @@ export class TodoStack extends cdk.Stack {
       }),
     );
 
+    // 5. AWS Amplify (프론트엔드 호스팅)
+    //    - GitHub Actions가 빌드한 결과물을 manual deployment로 업로드
+    //    - CI/CD 파이프라인: GitHub Actions → aws amplify create-deployment → start-deployment
+    const amplifyApp = new amplify.CfnApp(this, 'FrontendApp', {
+      name: 'todo-app-frontend',
+      platform: 'WEB',
+      description: 'TODO App frontend hosted on AWS Amplify',
+      customRules: [
+        // SPA 라우팅: 404를 index.html로 폴백
+        {
+          source: '</^[^.]+$|\\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|ttf|map|json)$)([^.]+$)/>',
+          target: '/index.html',
+          status: '200',
+        },
+      ],
+    });
+
+    const amplifyBranch = new amplify.CfnBranch(this, 'FrontendBranch', {
+      appId: amplifyApp.attrAppId,
+      branchName: 'master',
+      framework: 'React',
+      stage: 'PRODUCTION',
+      enableAutoBuild: false, // GitHub Actions가 빌드를 담당
+    });
+
     // Outputs
     new cdk.CfnOutput(this, 'ApiUrl', { value: api.url });
     new cdk.CfnOutput(this, 'IdentityPoolId', { value: identityPool.ref });
     new cdk.CfnOutput(this, 'Region', { value: this.region });
+    new cdk.CfnOutput(this, 'AmplifyAppId', { value: amplifyApp.attrAppId });
+    new cdk.CfnOutput(this, 'AmplifyBranchName', { value: amplifyBranch.branchName });
+    new cdk.CfnOutput(this, 'AmplifyDefaultDomain', {
+      value: `https://${amplifyBranch.branchName}.${amplifyApp.attrDefaultDomain}`,
+      description: 'Amplify 호스팅 기본 URL',
+    });
   }
 }
