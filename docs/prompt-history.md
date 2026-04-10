@@ -185,3 +185,41 @@
 - **프롬프트**: (터미널에서 `npm run lint:backend` 실행 시 Missing script 에러)
 - **의도**: 루트에서 `lint:backend`, `format:backend` 명령어로 바로 실행 가능하도록
 - **결과**: 루트 package.json에 `lint:backend`, `format:backend` 스크립트 추가
+
+### #33
+- **프롬프트**: `Phase 3 코드 구현을 먼저해줘`
+- **의도**: AWS 계정 설정과 무관하게 Phase 3 프론트-백엔드 연동 코드를 먼저 구현
+- **결과**: Cognito Identity Pool 자격증명 서비스 + SigV4 서명 API 클라이언트 + TodoContext API 전환 (8 tests 추가). Vite/Jest 호환 위해 `process.env.VITE_*` + Vite `define`으로 환경변수 주입 방식 변경. 3개 커밋으로 분리 (#bb0e262, #811ff95, #2242e0b)
+
+### #34
+- **프롬프트**: `CLAUDE.md에 명명 규칙 섹션을 추가해줘. 명명 규칙에는 브랜칭 전략에 대한 내용도 추가해줘`
+- **의도**: Claude Code가 일관된 브랜치/커밋/네이밍을 유지하도록 규칙 명시
+- **결과**: CLAUDE.md에 명명 규칙(브랜치: `<type>/<issue-number>-<설명>`, 커밋: Conventional Commits 한국어, 파일/코드) + GitHub Flow 브랜칭 전략 추가. 모든 작업 브랜치는 gh issue와 연동
+
+### #35
+- **프롬프트**: `이 프로젝트는 교육용 프로젝트야. 비용은 최대한 프리티어 한도내에서 진행하고 빠르게 구현할 수 있는 MVP 접근방식을 사용해줘.`
+- **의도**: DevOps 운영 원칙 수립 (교육 우선, 프리 티어, MVP)
+- **결과**: `docs/DevOps/prd.md` 신규 생성 — 교육 프로젝트 특성, AWS 프리 티어 한도 표, Do/Don't, 의사결정 4가지 질문 정리
+
+### #36
+- **프롬프트**: `DevOps 프로젝트 수행을 위한 테스크들을 문서로 정리해줘. 기간에 대한 산정은 하지 말고 작업들을 최대한 세분화해줘.`
+- **의도**: DevOps 작업을 Phase별로 세분화하여 작업 추적 가능하게
+- **결과**: `docs/DevOps/tasks.md` 신규 생성 — 11개 Phase (로컬 환경, Git Hooks, CI, 배포, AWS, 비용, 보안, 모니터링, 문서, 브랜치 전략, 후속 개선). 항목별 AC 포함, 기간 산정 제외
+
+### #37
+- **프롬프트**: `Phase 1의 작업들을 계획 단계부터 포함해서 GitHub 이슈로 등록해줘.`
+- **의도**: 이슈 트래킹 워크플로를 실제로 사용해보고 학습 기록으로 남김
+- **결과**: gh cli로 8개 이슈 등록 — 계획 4개 (#1~#4: 모노레포, 프론트엔드, 백엔드, 환경변수 전략) + 구현 4개 (#5~#8: 1.1~1.4). 구현 이슈는 `Closes #N`으로 계획 이슈 참조
+
+### #38
+- **프롬프트**: `프론트앤드 빌드 자동화 뿐만 아니라 배포 자동화도 포함시켜줘. 프론트 배포는 AWS Amplify를 사용하는 것으로 해줘`
+- **의도**: 기존 CI(lint/build/test)에 더해 AWS Amplify 자동 배포 추가
+- **결과**: 3개 커밋으로 분리
+  1. CDK 스택에 Amplify App + Branch 추가 (SPA 폴백, 3개 Output, 스냅샷 테스트 3개)
+  2. `.github/workflows/deploy-frontend.yml` — CI 성공 시 `workflow_run` 트리거, `aws amplify create-deployment` → 업로드 → `start-deployment` → 상태 폴링
+  3. docs 업데이트 (infrastructure.md 파이프라인 다이어그램, DevOps/tasks.md Phase 4 재작성, DevOps/prd.md 비용 표에 Amplify 추가)
+
+### #39
+- **프롬프트**: `/document_update` 커맨드로 문서 최신화
+- **의도**: 최근 작업(Amplify, 백엔드 hook 등) 반영하여 README 및 design 인덱스 동기화
+- **결과**: README.md 기술 스택 업데이트(Amplify 추가), 시작하기 섹션 확장, Git Hooks 섹션에 백엔드 추가, DevOps 문서 테이블 추가. docs/design/README.md 시스템 아키텍처와 기술 스택 요약을 Amplify/IAM 인증 기반으로 최신화
