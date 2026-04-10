@@ -223,3 +223,8 @@
 - **프롬프트**: `/document_update` 커맨드로 문서 최신화
 - **의도**: 최근 작업(Amplify, 백엔드 hook 등) 반영하여 README 및 design 인덱스 동기화
 - **결과**: README.md 기술 스택 업데이트(Amplify 추가), 시작하기 섹션 확장, Git Hooks 섹션에 백엔드 추가, DevOps 문서 테이블 추가. docs/design/README.md 시스템 아키텍처와 기술 스택 요약을 Amplify/IAM 인증 기반으로 최신화
+
+### #40
+- **프롬프트**: `이제 서비스와 인프라의 상황을 확인할 수 있는 대시보드를 추가하고 싶어. AWS CloudWathch Dashboard를 CDK로 구현해줘. 먼저 이에 대한 이슈를 생성해줘` → `다음을 진행해줘`
+- **의도**: 운영 가시성을 위한 CloudWatch Dashboard를 CDK 형상관리에 포함. 이슈 우선 등록 후 구현
+- **결과**: `gh issue create`로 이슈 #9 등록 (위젯 구성·비범위 명시). `feat/9-cloudwatch-dashboard` 브랜치에서 `TodoStack`에 `cloudwatch.Dashboard` 추가 — API Gateway(Count/4XX·5XX/Latency·IntegrationLatency p50·p90·p99), Lambda × 4(Invocations/Errors/Duration p50·p99/Throttles + ConcurrentExecutions 합산 MathExpression), DynamoDB(Consumed CU/Throttle/System·User Errors) 위젯과 `DashboardUrl` Output. 스냅샷 테스트 4개 추가(`Fn::Join` 리터럴 조각만 이어붙여 위젯 타이틀 검증). `docs/design/infrastructure.md` 모니터링 섹션 + `DevOps/tasks.md` Phase 8.3 갱신

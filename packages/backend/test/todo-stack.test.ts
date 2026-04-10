@@ -72,6 +72,44 @@ describe('TodoStack', () => {
     });
   });
 
+  describe('CloudWatch Dashboard', () => {
+    it('Dashboard 리소스가 1개 존재한다', () => {
+      template.resourceCountIs('AWS::CloudWatch::Dashboard', 1);
+    });
+
+    it('Dashboard 이름이 TodoApp-Dashboard로 설정된다', () => {
+      template.hasResourceProperties('AWS::CloudWatch::Dashboard', {
+        DashboardName: 'TodoApp-Dashboard',
+      });
+    });
+
+    it('Dashboard body에 API Gateway / Lambda / DynamoDB 메트릭 위젯이 포함된다', () => {
+      const dashboards = template.findResources('AWS::CloudWatch::Dashboard');
+      const [dashboard] = Object.values(dashboards);
+      // DashboardBody는 Fn::Join 토큰이므로 리터럴 조각만 이어붙여 검색한다
+      const join = dashboard.Properties.DashboardBody['Fn::Join'];
+      const literalBody = (join[1] as unknown[])
+        .filter((part): part is string => typeof part === 'string')
+        .join('');
+
+      expect(literalBody).toContain('API Gateway · 요청 수 (Count)');
+      expect(literalBody).toContain('API Gateway · 4XX / 5XX 에러');
+      expect(literalBody).toContain('API Gateway · Latency (p50/p90/p99)');
+      expect(literalBody).toContain('Lambda · Invocations');
+      expect(literalBody).toContain('Lambda · Duration p99');
+      expect(literalBody).toContain('Lambda · ConcurrentExecutions');
+      expect(literalBody).toContain('DynamoDB · ConsumedCapacityUnits');
+      expect(literalBody).toContain('DynamoDB · ThrottleEvents');
+      expect(literalBody).toContain('DynamoDB · System / User Errors');
+    });
+
+    it('DashboardUrl Output이 정의된다', () => {
+      template.hasOutput('DashboardUrl', {
+        Description: 'CloudWatch Dashboard URL',
+      });
+    });
+  });
+
   describe('Amplify', () => {
     it('Amplify App이 존재한다', () => {
       template.resourceCountIs('AWS::Amplify::App', 1);

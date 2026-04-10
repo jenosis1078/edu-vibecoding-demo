@@ -232,7 +232,9 @@
 - [ ] 프론트엔드 에러 콘솔 출력 확인 (추가 도구 X)
 
 ### 8.3 성능 관찰 (선택)
-- [ ] CloudWatch Metrics 기본 지표 확인 방법 문서화
+- [x] CloudWatch Metrics 기본 지표 확인 방법 문서화 (`docs/design/infrastructure.md` 모니터링 섹션)
+- [x] CloudWatch Dashboard CDK로 정의 (API GW / Lambda × 4 / DynamoDB 위젯, `TodoApp-Dashboard`)
+- [ ] CloudWatch Alarm + SNS 알림 (후속 이슈)
 - [ ] X-Ray는 사용하지 않음 (비용/복잡도 이유)
 
 ---
