@@ -6,6 +6,7 @@ import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as amplify from 'aws-cdk-lib/aws-amplify';
+import * as cloudwatch from 'aws-cdk-lib/aws-cloudwatch';
 import { Construct } from 'constructs';
 import * as path from 'path';
 
@@ -148,6 +149,151 @@ export class TodoStack extends cdk.Stack {
       enableAutoBuild: false, // GitHub Actions가 빌드를 담당
     });
 
+    // 6. CloudWatch Dashboard (서비스/인프라 모니터링)
+    const dashboard = new cloudwatch.Dashboard(this, 'TodoDashboard', {
+      dashboardName: 'TodoApp-Dashboard',
+    });
+
+    const apiName = 'Todo API';
+    const apiDimensions = { ApiName: apiName };
+
+    const apiMetric = (metricName: string, statistic: string) =>
+      new cloudwatch.Metric({
+        namespace: 'AWS/ApiGateway',
+        metricName,
+        dimensionsMap: apiDimensions,
+        statistic,
+      });
+
+    // API Gateway: 요청 수 / 4XX·5XX
+    dashboard.addWidgets(
+      new cloudwatch.GraphWidget({
+        title: 'API Gateway · 요청 수 (Count)',
+        left: [apiMetric('Count', 'Sum')],
+        width: 12,
+      }),
+      new cloudwatch.GraphWidget({
+        title: 'API Gateway · 4XX / 5XX 에러',
+        left: [apiMetric('4XXError', 'Sum'), apiMetric('5XXError', 'Sum')],
+        width: 12,
+      }),
+    );
+
+    // API Gateway: Latency / IntegrationLatency (p50/p90/p99)
+    dashboard.addWidgets(
+      new cloudwatch.GraphWidget({
+        title: 'API Gateway · Latency (p50/p90/p99)',
+        left: [
+          apiMetric('Latency', 'p50'),
+          apiMetric('Latency', 'p90'),
+          apiMetric('Latency', 'p99'),
+        ],
+        width: 12,
+      }),
+      new cloudwatch.GraphWidget({
+        title: 'API Gateway · IntegrationLatency (p50/p90/p99)',
+        left: [
+          apiMetric('IntegrationLatency', 'p50'),
+          apiMetric('IntegrationLatency', 'p90'),
+          apiMetric('IntegrationLatency', 'p99'),
+        ],
+        width: 12,
+      }),
+    );
+
+    // Lambda: 4개 핸들러 종합 위젯
+    const lambdaFns: Record<string, lambda.NodejsFunction> = {
+      CreateTodo: createTodo,
+      GetTodos: getTodos,
+      DeleteTodo: deleteTodo,
+      ToggleTodo: toggleTodo,
+    };
+
+    dashboard.addWidgets(
+      new cloudwatch.GraphWidget({
+        title: 'Lambda · Invocations',
+        left: Object.entries(lambdaFns).map(([label, fn]) => fn.metricInvocations({ label })),
+        width: 12,
+      }),
+      new cloudwatch.GraphWidget({
+        title: 'Lambda · Errors',
+        left: Object.entries(lambdaFns).map(([label, fn]) => fn.metricErrors({ label })),
+        width: 12,
+      }),
+    );
+
+    dashboard.addWidgets(
+      new cloudwatch.GraphWidget({
+        title: 'Lambda · Duration p50',
+        left: Object.entries(lambdaFns).map(([label, fn]) =>
+          fn.metricDuration({ statistic: 'p50', label }),
+        ),
+        width: 12,
+      }),
+      new cloudwatch.GraphWidget({
+        title: 'Lambda · Duration p99',
+        left: Object.entries(lambdaFns).map(([label, fn]) =>
+          fn.metricDuration({ statistic: 'p99', label }),
+        ),
+        width: 12,
+      }),
+    );
+
+    dashboard.addWidgets(
+      new cloudwatch.GraphWidget({
+        title: 'Lambda · ConcurrentExecutions (합산)',
+        left: [
+          new cloudwatch.MathExpression({
+            expression: 'm1 + m2 + m3 + m4',
+            label: 'Total ConcurrentExecutions',
+            usingMetrics: {
+              m1: createTodo.metric('ConcurrentExecutions', { statistic: 'Maximum' }),
+              m2: getTodos.metric('ConcurrentExecutions', { statistic: 'Maximum' }),
+              m3: deleteTodo.metric('ConcurrentExecutions', { statistic: 'Maximum' }),
+              m4: toggleTodo.metric('ConcurrentExecutions', { statistic: 'Maximum' }),
+            },
+          }),
+        ],
+        width: 12,
+      }),
+      new cloudwatch.GraphWidget({
+        title: 'Lambda · Throttles',
+        left: Object.entries(lambdaFns).map(([label, fn]) => fn.metricThrottles({ label })),
+        width: 12,
+      }),
+    );
+
+    // DynamoDB: ConsumedCapacity / Throttle / Errors
+    const tableDimensions = { TableName: this.table.tableName };
+    const ddbMetric = (metricName: string) =>
+      new cloudwatch.Metric({
+        namespace: 'AWS/DynamoDB',
+        metricName,
+        dimensionsMap: tableDimensions,
+        statistic: 'Sum',
+      });
+
+    dashboard.addWidgets(
+      new cloudwatch.GraphWidget({
+        title: 'DynamoDB · ConsumedCapacityUnits (Read/Write)',
+        left: [ddbMetric('ConsumedReadCapacityUnits'), ddbMetric('ConsumedWriteCapacityUnits')],
+        width: 12,
+      }),
+      new cloudwatch.GraphWidget({
+        title: 'DynamoDB · ThrottleEvents (Read/Write)',
+        left: [ddbMetric('ReadThrottleEvents'), ddbMetric('WriteThrottleEvents')],
+        width: 12,
+      }),
+    );
+
+    dashboard.addWidgets(
+      new cloudwatch.GraphWidget({
+        title: 'DynamoDB · System / User Errors',
+        left: [ddbMetric('SystemErrors'), ddbMetric('UserErrors')],
+        width: 24,
+      }),
+    );
+
     // Outputs
     new cdk.CfnOutput(this, 'ApiUrl', { value: api.url });
     new cdk.CfnOutput(this, 'IdentityPoolId', { value: identityPool.ref });
@@ -157,6 +303,10 @@ export class TodoStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'AmplifyDefaultDomain', {
       value: `https://${amplifyBranch.branchName}.${amplifyApp.attrDefaultDomain}`,
       description: 'Amplify 호스팅 기본 URL',
+    });
+    new cdk.CfnOutput(this, 'DashboardUrl', {
+      value: `https://${this.region}.console.aws.amazon.com/cloudwatch/home?region=${this.region}#dashboards:name=${dashboard.dashboardName}`,
+      description: 'CloudWatch Dashboard URL',
     });
   }
 }
