@@ -86,6 +86,7 @@ Amplify 배포를 위한 GitHub Secrets:
 | UnauthRole | IAM | 무료 |
 | FrontendApp | Amplify Hosting | 무료 티어: 월 15GB serve, 1000 빌드 분 (본 프로젝트는 외부 빌드) |
 | FrontendBranch | Amplify Branch | 무료 |
+| TodoDashboard | CloudWatch Dashboard | 계정당 3개까지 무료 (이후 월 $3/대시보드) |
 
 > 데모 프로젝트 규모에서는 AWS 프리 티어 범위 내에서 무료로 운영 가능
 
@@ -107,3 +108,30 @@ Amplify 배포를 위한 GitHub Secrets:
 5. **master 브랜치 push**
    - ci.yml → deploy-frontend.yml 순차 실행
    - Amplify Console에서 배포 결과 확인
+
+## 모니터링 (CloudWatch Dashboard)
+
+`TodoStack`은 서비스/인프라 상태를 한 화면에서 확인할 수 있는 CloudWatch Dashboard(`TodoApp-Dashboard`)를 함께 정의한다. 배포 후 CDK Output `DashboardUrl`로 바로 접근 가능하다.
+
+### 위젯 구성
+
+| 카테고리 | 위젯 | 메트릭 |
+|---------|------|--------|
+| API Gateway | 요청 수 | `Count` (Sum) |
+| API Gateway | 4XX / 5XX 에러 | `4XXError`, `5XXError` (Sum) |
+| API Gateway | Latency | `Latency` p50/p90/p99 |
+| API Gateway | Integration Latency | `IntegrationLatency` p50/p90/p99 |
+| Lambda × 4 | Invocations | `Invocations` (핸들러별 라인) |
+| Lambda × 4 | Errors | `Errors` (핸들러별 라인) |
+| Lambda × 4 | Duration p50 / p99 | `Duration` (핸들러별 라인) |
+| Lambda 합산 | ConcurrentExecutions | 4개 핸들러 `ConcurrentExecutions` 합산 (MathExpression) |
+| Lambda × 4 | Throttles | `Throttles` (핸들러별 라인) |
+| DynamoDB | Consumed Capacity | `ConsumedReadCapacityUnits`, `ConsumedWriteCapacityUnits` |
+| DynamoDB | Throttle Events | `ReadThrottleEvents`, `WriteThrottleEvents` |
+| DynamoDB | System / User Errors | `SystemErrors`, `UserErrors` |
+
+### 비범위 (별도 후속 이슈)
+
+- CloudWatch Alarm + SNS 알림
+- X-Ray / Application Signals 추적
+- 애플리케이션 레벨 커스텀 메트릭
