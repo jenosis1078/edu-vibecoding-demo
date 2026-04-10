@@ -4,14 +4,14 @@
 
 ![System Architecture](/05차시_프로젝트%20기획%20및%20설계-20251002T130745Z-1-001/docs/images/architecture.svg)
 
-- **클라이언트**: React + Vite + Mantine (GitHub Pages 배포)
+- **클라이언트**: React + Vite + Mantine (AWS Amplify Hosting 배포)
 - **권한 제어**: AWS Cognito Identity Pool (비인증 사용자 식별, 로그인 불필요)
 - **API**: API Gateway (REST) + IAM 인증 (Cognito 임시 자격증명)
 - **비즈니스 로직**: AWS Lambda (Node.js 20.x / TypeScript) - 4개 함수
 - **데이터베이스**: DynamoDB (PK: userId, SK: id)
 - **인프라 관리**: AWS CDK (TypeScript) + NodejsFunction으로 Lambda 자동 번들링
 - **프로젝트 구조**: 모노레포 (npm workspaces) — shared, frontend, backend(CDK+Lambda 통합) 3패키지
-- **CI/CD**: GitHub Actions → GitHub Pages 자동 배포
+- **CI/CD**: GitHub Actions (ci.yml: lint/build/test, deploy-frontend.yml: Amplify 자동 배포)
 
 ---
 
@@ -24,7 +24,7 @@
 | [api.md](api.md) | API 엔드포인트, 응답 형식, 권한 제어 흐름 |
 | [frontend.md](frontend.md) | Mantine UI, 상태 관리, 화면 구성, 컴포넌트 트리 |
 | [backend.md](backend.md) | CDK 스택 + Lambda 핸들러 + DynamoDB 유틸, 테스트 전략 |
-| [infrastructure.md](infrastructure.md) | CDK 스택, 배포 파이프라인 |
+| [infrastructure.md](infrastructure.md) | 배포 파이프라인(Amplify), 환경변수, AWS 리소스/비용, 셋업 순서 |
 
 ---
 
@@ -38,13 +38,13 @@
 | 상태 관리 | React Context + useReducer |
 | 테스트 | Jest, React Testing Library |
 | 코드 품질 | ESLint, Prettier, Husky (pre-commit hook) |
-| 백엔드 | AWS Lambda (Node.js / TypeScript) |
-| 데이터베이스 | Amazon DynamoDB |
+| 백엔드 | AWS Lambda (Node.js 20.x / TypeScript) |
+| 데이터베이스 | Amazon DynamoDB (PAY_PER_REQUEST) |
 | 권한 제어 | AWS Cognito Identity Pool (비인증 사용자 식별) |
-| API | Amazon API Gateway (REST) |
+| API | Amazon API Gateway (REST) + IAM 인증 |
 | 인프라 코드 | AWS CDK (TypeScript) + NodejsFunction |
-| CI/CD | GitHub Actions |
-| 호스팅 | GitHub Pages (프론트엔드), AWS (백엔드) |
+| CI/CD | GitHub Actions (ci.yml, deploy-frontend.yml) |
+| 호스팅 | AWS Amplify Hosting (프론트엔드), AWS Lambda (백엔드) |
 
 ---
 
@@ -82,5 +82,6 @@
 
 ### Phase 4: 배포 및 CI/CD
 
-1. GitHub Actions CI/CD
-2. CDK deploy + GitHub Pages 배포
+1. GitHub Actions CI (lint/build/test)
+2. 백엔드: 수동 `cdk deploy` (AWS 계정 필요)
+3. 프론트엔드: `deploy-frontend.yml`로 AWS Amplify 자동 배포
