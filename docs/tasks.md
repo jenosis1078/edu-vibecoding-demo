@@ -156,11 +156,8 @@
 ### 2.6 Phase 2 검증 (3pt)
 
 - [x] **(1pt)** 전체 백엔드 테스트 통과 (`npm test -w @todo-app/backend`)
-- [ ] **(1pt)** CDK synth 성공 확인
-  - **AC**: `npm run synth -w @todo-app/backend` 실행 시 에러 없이 `cdk.out/` 생성
-- [ ] **(1pt)** `cdk deploy`로 AWS 리소스 배포 및 수동 API 테스트 (curl/Postman)
-  - **AC**: DynamoDB 테이블, Lambda 4개, API Gateway, Cognito Identity Pool이 AWS 콘솔에서 확인됨
-  - **AC**: curl로 API Gateway URL에 요청 시 정상 응답 (SigV4 서명 포함)
+- [x] **(1pt)** CDK synth 성공 확인 (`npm run synth` 통과)
+- [ ] ~~**(1pt)** `cdk deploy`로 AWS 리소스 배포~~ — AWS 계정 미설정으로 스킵
 
 ---
 
@@ -195,8 +192,7 @@
 
 - [x] **(1pt)** 전체 테스트 통과 (`npm test -w @todo-app/frontend`)
   - **AC**: 49 tests 전체 통과 (기존 41 + API 8)
-- [ ] **(1pt)** TODO CRUD → 새로고침 후 DynamoDB 데이터 유지 확인 (배포 후 수동 검증)
-  - **AC**: 브라우저에서 TODO 추가 → 새로고침 → 동일 데이터 표시 (DynamoDB에서 재조회)
+- [ ] ~~**(1pt)** TODO CRUD → DynamoDB 데이터 유지 확인~~ — AWS 미배포로 스킵
 
 ---
 
@@ -211,19 +207,17 @@
 
 ### 4.2 최종 배포 (3pt)
 
-- [ ] **(1pt)** CDK로 프로덕션 AWS 인프라 배포
-  - **AC**: `npm run deploy -w @todo-app/backend` 성공, CloudFormation 스택 CREATE_COMPLETE
-- [ ] **(1pt)** GitHub Pages에 프론트엔드 배포
+- [ ] ~~**(1pt)** CDK로 프로덕션 AWS 인프라 배포~~ — AWS 계정 미설정으로 스킵
+- [ ] **(1pt)** GitHub Pages에 프론트엔드 배포 (로컬 스토리지 모드)
   - **AC**: GitHub Pages URL에서 TODO 앱 정상 로딩
-- [ ] **(1pt)** 환경변수 설정 (API Gateway URL, Cognito Identity Pool ID)
-  - **AC**: GitHub Secrets에 `VITE_API_URL`, `VITE_IDENTITY_POOL_ID`, `VITE_REGION` 설정, 빌드 시 주입 확인
+- [ ] ~~**(1pt)** 환경변수 설정~~ — AWS 미배포로 스킵
 
 ### 4.3 최종 검증 (2pt)
 
-- [ ] **(1pt)** 프로덕션 환경 전체 기능 테스트
-  - **AC**: GitHub Pages에서 TODO CRUD + 검색/필터/정렬 + 새로고침 데이터 유지 확인
+- [ ] **(1pt)** GitHub Pages에서 전체 기능 테스트 (로컬 스토리지 모드)
+  - **AC**: TODO CRUD + 검색/필터/정렬 + 새로고침 데이터 유지 확인
 - [ ] **(1pt)** CI/CD 파이프라인 동작 확인 (push → 자동 빌드 → 배포)
-  - **AC**: master에 push 후 GitHub Actions가 CI 통과 → GitHub Pages 자동 배포 → 사이트 업데이트 확인
+  - **AC**: master에 push 후 GitHub Actions CI 통과 → GitHub Pages 자동 배포
 
 ---
 
