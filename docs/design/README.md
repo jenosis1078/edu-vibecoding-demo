@@ -25,6 +25,7 @@
 | [frontend.md](frontend.md) | Mantine UI, 상태 관리, 화면 구성, 컴포넌트 트리 |
 | [backend.md](backend.md) | CDK 스택 + Lambda 핸들러 + DynamoDB 유틸, 테스트 전략 |
 | [infrastructure.md](infrastructure.md) | 배포 파이프라인(Amplify), 환경변수, AWS 리소스/비용, 셋업 순서 |
+| [workflow.md](workflow.md) | 개발 워크플로 — 이슈 생성 → 브랜치 → 구현 → PR → 리뷰 → CI/CD |
 
 ---
 
