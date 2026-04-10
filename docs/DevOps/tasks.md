@@ -99,37 +99,49 @@
 
 ---
 
-## Phase 4: GitHub Pages 배포 (프론트엔드)
+## Phase 4: 프론트엔드 배포 (AWS Amplify)
 
-### 4.1 Vite GitHub Pages 빌드 설정
-- [ ] `vite.config.ts`에 `base` 경로 설정 (`/edu-vibecoding-demo/`)
-  - **AC**: 빌드 결과물이 서브경로에서 정상 로드됨
-- [ ] React Router 사용 시 basename 설정 (해당 없음 — 단일 페이지)
+### 4.1 CDK 스택에 Amplify App 정의
+- [x] `lib/todo-stack.ts`에 `amplify.CfnApp` 추가 (name: `todo-app-frontend`)
+- [x] `amplify.CfnBranch`로 `master` 브랜치 정의 (`enableAutoBuild: false`)
+- [x] SPA 라우팅 폴백 (`customRules`: 404 → `/index.html`)
+- [x] CDK Output: `AmplifyAppId`, `AmplifyBranchName`, `AmplifyDefaultDomain`
+- [x] CDK 스냅샷 테스트에 Amplify 리소스 검증 추가 (3 tests)
 
-### 4.2 GitHub Pages 배포 워크플로
-- [ ] `.github/workflows/deploy-frontend.yml` 생성
-- [ ] master push 트리거 설정
-- [ ] `actions/checkout@v4` + `actions/setup-node@v4` 구성
-- [ ] 프론트엔드 빌드 실행 (`npm run build:frontend`)
-- [ ] `actions/upload-pages-artifact@v3`로 `dist/` 업로드
-- [ ] `actions/deploy-pages@v4`로 배포
-  - **AC**: master에 push 후 워크플로 자동 실행, 사이트 업데이트
+### 4.2 GitHub Actions 배포 워크플로
+- [x] `.github/workflows/deploy-frontend.yml` 생성
+- [x] 트리거: `workflow_run`으로 CI 완료 후 실행 + `workflow_dispatch` 수동 실행
+- [x] concurrency 그룹으로 동시 실행 방지
+- [x] `actions/checkout@v4` + `actions/setup-node@v4` (node 20, npm cache)
+- [x] 프론트엔드 빌드 (`VITE_*` 환경변수 주입)
+- [x] `aws-actions/configure-aws-credentials@v4`로 AWS 인증
+- [x] `dist/` 폴더를 zip으로 패키징
+- [x] `aws amplify create-deployment` → 업로드 → `start-deployment`
+- [x] `aws amplify get-job`으로 배포 상태 폴링 (최대 5분)
+  - **AC**: master push 후 CI 성공 시 deploy 워크플로 자동 실행
 
-### 4.3 GitHub Pages 환경 설정
-- [ ] GitHub 저장소 Settings → Pages → Source를 "GitHub Actions"로 변경
-- [ ] 워크플로에 `permissions: pages: write, id-token: write` 추가
-- [ ] 환경 `github-pages` 지정
-  - **AC**: `https://<username>.github.io/edu-vibecoding-demo/`에서 앱 접근 가능
+### 4.3 GitHub Secrets 등록
+- [ ] `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` — Amplify 배포 권한 IAM 사용자
+- [ ] `AWS_REGION` — Amplify 앱이 배포된 리전
+- [ ] `AMPLIFY_APP_ID` — CDK Output `AmplifyAppId` 값
+- [ ] `AMPLIFY_BRANCH_NAME` — `master`
+- [ ] `VITE_API_URL`, `VITE_IDENTITY_POOL_ID`, `VITE_REGION` — 빌드 시 주입
+  - **AC**: GitHub Actions 워크플로가 시크릿을 정상 참조
 
-### 4.4 환경변수 주입
-- [ ] GitHub Secrets에 `VITE_API_URL`, `VITE_IDENTITY_POOL_ID`, `VITE_REGION` 등록 (AWS 배포 시)
-- [ ] 워크플로에서 env로 주입
-  - **AC**: 빌드된 JS 번들에 환경변수 값이 포함됨
+### 4.4 Amplify 배포 권한 IAM 정책
+- [ ] IAM 사용자 생성 (프로그래밍 방식 액세스)
+- [ ] 최소 권한 정책 부여:
+  - `amplify:CreateDeployment`
+  - `amplify:StartDeployment`
+  - `amplify:GetJob`
+  - 특정 `AmplifyAppId` 리소스로 제한
+  - **AC**: IAM Access Analyzer에서 과도한 권한 경고 없음
 
 ### 4.5 배포 검증
-- [ ] 수동 smoke test: 페이지 로드, TODO 추가/삭제/토글
-- [ ] 404 페이지 확인 (SPA 라우팅 폴백 필요 시)
-- [ ] 빌드 아티팩트 크기 확인 (500KB 경고 해결 여부 검토)
+- [ ] 수동 smoke test: Amplify URL 접속 후 TODO 추가/삭제/토글
+- [ ] SPA 라우팅 폴백 확인 (없는 경로 → index.html 반환)
+- [ ] 빌드 아티팩트 크기 확인 (현재 602KB — 500KB 경고 해결 여부 검토)
+- [ ] Amplify Console에서 배포 로그 및 소요 시간 확인
 
 ---
 

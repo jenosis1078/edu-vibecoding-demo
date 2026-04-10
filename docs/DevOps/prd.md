@@ -20,6 +20,7 @@
 | API Gateway | 월 100만 호출 (12개월) | 데모 수준 — 무료 |
 | DynamoDB | 25GB 스토리지, 25 RCU/WCU | PAY_PER_REQUEST + 소량 데이터 — 무료 |
 | Cognito | 월 50,000 MAU (Identity Pool 비인증 무제한) | 무료 |
+| Amplify Hosting | 월 15GB serve, 1000 빌드 분 (12개월) | 외부 빌드 사용 — 무료 |
 | CloudWatch Logs | 5GB 수집 | 데모 수준 — 무료 |
 
 **비용 안전장치:**
@@ -63,22 +64,24 @@
 ### 환경 구성
 
 ```
-Local (개발)           → Vite dev server + 로컬 스토리지 모드
-GitHub Pages (데모)    → Vite 프로덕션 빌드 + 로컬 스토리지 모드
-AWS (선택)             → CDK deploy (프리 티어, 개인 학습자 선택적 배포)
+Local (개발)       → Vite dev server + 로컬 스토리지 모드
+Amplify (데모/운영) → GitHub Actions 빌드 + Amplify Hosting 자동 배포
+AWS 백엔드 (선택)   → 수동 cdk deploy (프리 티어, 학습자 선택적 배포)
 ```
 
 ### CI/CD
 
-- **GitHub Actions**: push/PR 시 lint → build → test만 실행 (이미 구축 완료)
-- **GitHub Pages 배포**: Vite 빌드 → gh-pages 브랜치 자동 배포
-- **AWS 배포**: 수동 `cdk deploy` (자동 배포 하지 않음 — 학습자가 직접 실행)
+- **ci.yml**: push/PR 시 lint → build → test (품질 게이트)
+- **deploy-frontend.yml**: CI 성공 시 Amplify에 프론트엔드 자동 배포
+  - Vite 빌드 → zip 패키징 → `aws amplify create-deployment` → 배포 완료 대기
+- **백엔드(CDK) 배포**: 수동 `npm run deploy` (학습자가 직접 실행)
 
 ### 보안 최소선
 
-- Secrets는 GitHub Secrets에만 저장
-- AWS 자격증명은 로컬 `aws configure`로만 관리 (CI/CD에서 AWS 배포 X)
-- Cognito Identity Pool 비인증 Role은 `execute-api:Invoke`만 허용 (최소 권한)
+- Secrets는 GitHub Secrets에만 저장 (`.env`는 Git 추적 금지)
+- 백엔드 CDK 자격증명은 로컬 `aws configure`로만 관리
+- Amplify 배포용 IAM 사용자는 최소 권한만 부여 (`amplify:CreateDeployment`, `StartDeployment`, `GetJob`)
+- Cognito Identity Pool 비인증 Role은 `execute-api:Invoke`만 허용
 
 ### 모니터링
 
