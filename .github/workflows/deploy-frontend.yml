@@ -1,0 +1,111 @@
+name: Deploy Frontend to Amplify
+
+on:
+  # CI 워크플로가 master 브랜치에서 성공한 이후에만 실행
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [master]
+  # 수동 트리거도 지원
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-frontend-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Build & Deploy to Amplify
+    runs-on: ubuntu-latest
+    # CI가 성공한 경우에만 실행 (workflow_dispatch도 허용)
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_IDENTITY_POOL_ID: ${{ secrets.VITE_IDENTITY_POOL_ID }}
+          VITE_REGION: ${{ secrets.VITE_REGION }}
+        run: npm run build:frontend
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Package dist as zip
+        working-directory: packages/frontend/dist
+        run: zip -r ../../../frontend-dist.zip .
+
+      - name: Create Amplify deployment
+        id: create-deployment
+        run: |
+          RESULT=$(aws amplify create-deployment \
+            --app-id "$AMPLIFY_APP_ID" \
+            --branch-name "$AMPLIFY_BRANCH_NAME" \
+            --output json)
+          echo "job-id=$(echo "$RESULT" | jq -r '.jobId')" >> "$GITHUB_OUTPUT"
+          echo "upload-url=$(echo "$RESULT" | jq -r '.zipUploadUrl')" >> "$GITHUB_OUTPUT"
+        env:
+          AMPLIFY_APP_ID: ${{ secrets.AMPLIFY_APP_ID }}
+          AMPLIFY_BRANCH_NAME: ${{ secrets.AMPLIFY_BRANCH_NAME }}
+
+      - name: Upload bundle to Amplify
+        run: |
+          curl -H "Content-Type: application/zip" \
+               --upload-file frontend-dist.zip \
+               "${{ steps.create-deployment.outputs.upload-url }}"
+
+      - name: Start Amplify deployment
+        run: |
+          aws amplify start-deployment \
+            --app-id "$AMPLIFY_APP_ID" \
+            --branch-name "$AMPLIFY_BRANCH_NAME" \
+            --job-id "${{ steps.create-deployment.outputs.job-id }}"
+        env:
+          AMPLIFY_APP_ID: ${{ secrets.AMPLIFY_APP_ID }}
+          AMPLIFY_BRANCH_NAME: ${{ secrets.AMPLIFY_BRANCH_NAME }}
+
+      - name: Wait for deployment to succeed
+        run: |
+          JOB_ID="${{ steps.create-deployment.outputs.job-id }}"
+          for i in {1..30}; do
+            STATUS=$(aws amplify get-job \
+              --app-id "$AMPLIFY_APP_ID" \
+              --branch-name "$AMPLIFY_BRANCH_NAME" \
+              --job-id "$JOB_ID" \
+              --query 'job.summary.status' \
+              --output text)
+            echo "Attempt $i — status: $STATUS"
+            case "$STATUS" in
+              SUCCEED)
+                echo "✅ 배포 성공"
+                exit 0
+                ;;
+              FAILED|CANCELLED)
+                echo "❌ 배포 실패 (상태: $STATUS)"
+                exit 1
+                ;;
+            esac
+            sleep 10
+          done
+          echo "⏱ 타임아웃"
+          exit 1
+        env:
+          AMPLIFY_APP_ID: ${{ secrets.AMPLIFY_APP_ID }}
+          AMPLIFY_BRANCH_NAME: ${{ secrets.AMPLIFY_BRANCH_NAME }}
